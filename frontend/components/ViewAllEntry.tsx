@@ -1,0 +1,133 @@
+import type { EntryInterface } from "../context/MyContext"; // import as type
+import { languages, languageColors } from "../context/MyContext";
+
+interface Props {
+  data: EntryInterface;
+}
+
+function ViewAllEntry({ data }: Props) {
+  //
+
+  // format date string nicely
+  const getWhenAdded = (dateStr: string | undefined) => {
+    if (!dateStr) return;
+    const formatter = new Intl.DateTimeFormat("en-UK", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true, // for am/pm
+    });
+    const date = new Date(dateStr);
+    return formatter.format(date);
+  };
+
+  // ============================================================================
+
+  // show edit form
+  const showEdit = () => {
+    console.log("showEdit");
+  };
+
+  // prompt to delete entry
+  const promptDeletion = () => {
+    console.log("promptDeletion");
+  };
+
+  // ============================================================================
+
+  return (
+    <div
+      className={`border border-[${languageColors[data.language]}] text-[${
+        languageColors[data.language]
+      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between word-entry-block`}
+    >
+      {/* Fields */}
+      <div className="flex flex-col gap-2">
+        {/* Language */}
+        <div>
+          <span className="font-bold opacity-30">Language:</span>{" "}
+          <span>{languages.find((x) => x.key === data.language)!["name"]}</span>
+        </div>
+
+        {/* Word */}
+        <div>
+          <span className="font-bold opacity-30">Word:</span> <span>{data.word}</span>
+        </div>
+
+        {/* Translation */}
+        <div>
+          <span className="font-bold opacity-30">Translation:</span> <span>{data.translation}</span>
+        </div>
+
+        {/* Definition */}
+        {data.definition && (
+          <div>
+            <span className="font-bold opacity-30">Definition:</span> <span>{data.definition}</span>
+          </div>
+        )}
+
+        {/* Category */}
+        {data.category && (
+          <div>
+            <span className="font-bold opacity-30">Category:</span> <span>{data.category}</span>
+          </div>
+        )}
+
+        {/* Example */}
+        {data.example && (
+          <div>
+            <span className="font-bold opacity-30">Example:</span> <span>{data.example}</span>
+          </div>
+        )}
+
+        {/* Note */}
+        {data.note && (
+          <div>
+            <span className="font-bold opacity-30">Note:</span> <span>{data.note}</span>
+          </div>
+        )}
+
+        {/* Web Img */}
+        {data.img && (
+          <div className="flex gap-4">
+            <span className="font-bold opacity-30">Web Img:</span>{" "}
+            <img alt="Web Image" src={data.img} className="max-w-[200px] object-contain" />
+          </div>
+        )}
+
+        {/* Created at */}
+        <div className="text-[12px] transition duration-200 opacity-70 hover:opacity-100">
+          <span className="font-bold opacity-30">Added:</span>{" "}
+          <span className="opacity-30">{getWhenAdded(data.createdAt)}</span>
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex items-start gap-x-3">
+        <button
+          onClick={showEdit}
+          className="text-sm px-3 py-1 transition duration-300 border border-gray-500 text-gray-500 rounded hover:bg-gray-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+        >
+          Edit
+        </button>
+
+        <button
+          onClick={promptDeletion}
+          className="text-sm px-3 py-1 transition duration-300 border border-red-500 text-red-400 rounded hover:bg-red-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default ViewAllEntry;
+
+/*
+{
+    "img": "",
+}
+*/

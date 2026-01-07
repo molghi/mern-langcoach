@@ -63,3 +63,4 @@ frontend/tailwind.config.js.map
 
 
 *.txt
+.vscode/

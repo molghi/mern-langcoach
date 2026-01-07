@@ -1,0 +1,11 @@
+:root {
+  --accent: antiquewhite;
+}
+
+.word-entry-block {
+  transition: all 1s;
+}
+
+.word-entry-block:hover {
+  box-shadow: inset 0 0 10px var(--accent);
+}
