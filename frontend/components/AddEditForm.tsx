@@ -1,8 +1,13 @@
-import { useRef, useEffect, useState } from "react";
-import { createNewEntry } from "../utils/dbFunctions";
-import { languages } from "../context/MyContext";
+import { useRef, useEffect, useState, useContext } from "react";
+import { createNewEntry, getUserEntries, updateOneEntry } from "../utils/dbFunctions";
+import { Context, languages } from "../context/MyContext";
+import type { EntryInterface } from "../context/MyContext";
 
 function AddEditForm() {
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Incorrect context usage");
+  const { itemInEdit, setItemInEdit, setEntries } = ctx;
+
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const [word, setWord] = useState("");
   const [language, setLanguage] = useState(languages[0].key);
@@ -13,6 +18,7 @@ function AddEditForm() {
   const [example, setExample] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState(""); // for validation errors
+  const [mode, setMode] = useState("add"); // either add or edit
 
   // get field value
   const fieldGetter = (key: string) => {
@@ -92,21 +98,62 @@ function AddEditForm() {
   ];
 
   useEffect(() => {
+    if (itemInEdit !== null) {
+      // if edit mode
+      setMode("edit");
+      setWord(itemInEdit.word);
+      setLanguage(itemInEdit.language);
+      setTranslation(itemInEdit.translation);
+      setDefinition(itemInEdit.definition);
+      setCategory(itemInEdit.category);
+      setImg(itemInEdit.img);
+      setExample(itemInEdit.example);
+      setNote(itemInEdit.note);
+    }
+
+    if (itemInEdit === null) {
+      // if add mode
+      setMode("add");
+      setWord("");
+      setLanguage(languages[0].key);
+      setTranslation("");
+      setDefinition("");
+      setCategory("");
+      setImg("");
+      setExample("");
+      setNote("");
+    }
+
     firstFieldRef.current?.focus(); // focus first field
-  }, []);
+  }, [itemInEdit]);
 
   // ============================================================================
 
   // submit either Add or Edit form
   const submitForm = async (e: React.FormEvent<HTMLFormElement>, mode: string) => {
     e.preventDefault();
-    const newEntry = { word, language, translation, definition, category, img, example, note };
+    const newEntry: EntryInterface = { word, language, translation, definition, category, img, example, note };
 
     if (mode === "add") {
-      await createNewEntry(newEntry, setError);
+      await createNewEntry(newEntry, setError); // add to db
+      // reset fields
+      setWord("");
+      setLanguage(languages[0].key);
+      setTranslation("");
+      setDefinition("");
+      setCategory("");
+      setImg("");
+      setExample("");
+      setNote("");
+      // focus first field
+      firstFieldRef.current?.focus();
     }
+
     if (mode === "edit") {
-      console.log("edit entry req");
+      if (itemInEdit !== null) newEntry._id = itemInEdit._id;
+      const isUpdateSuccessful = await updateOneEntry(newEntry, setError);
+      // if (isUpdateSuccessful) getUserEntries(setEntries); // no need to do that since I'm on tab 1
+      if (isUpdateSuccessful) setItemInEdit(null); // switch mode back to Add
     }
   };
 
@@ -116,11 +163,13 @@ function AddEditForm() {
     <div className="font-mono max-w-[700px] mx-auto">
       {/* Title */}
       <h1 className="text-[antiquewhite] text-center my-10 font-bold text-3xl">
-        <span className="bg-black/50 rounded-[5px] px-4 py-1.5"> Add Word / Phrase</span>{" "}
+        <span className="bg-black/50 rounded-[5px] px-4 py-1.5">
+          {mode.slice(0, 1).toUpperCase() + mode.slice(1).toLowerCase()} Word / Phrase
+        </span>{" "}
       </h1>
 
       {/* Iterate and Generate Fields */}
-      <form onSubmit={(e) => submitForm(e, "add")}>
+      <form onSubmit={(e) => submitForm(e, mode)}>
         <div className="grid grid-cols-2 gap-x-10 gap-y-8 mb-10">
           {fieldsConfig.map((el, i) => (
             <div key={i} className="flex flex-col gap-[5px]">
@@ -167,7 +216,7 @@ function AddEditForm() {
             type="submit"
             className="border border-[antiquewhite] text-[antiquewhite] text-[18px] min-w-[100px] px-[15px] py-[10px] rounded-xl transition duration-300 uppercase hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50"
           >
-            Add
+            {mode.toUpperCase()}
           </button>
         </div>
       </form>

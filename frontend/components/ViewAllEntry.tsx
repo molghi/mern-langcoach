@@ -1,12 +1,16 @@
 import type { EntryInterface } from "../context/MyContext"; // import as type
-import { languages, languageColors } from "../context/MyContext";
+import { languages, languageColors, Context } from "../context/MyContext";
+import { useContext } from "react";
+import { deleteOneEntry, getUserEntries } from "../utils/dbFunctions";
 
 interface Props {
   data: EntryInterface;
 }
 
 function ViewAllEntry({ data }: Props) {
-  //
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Incorrect context usage.");
+  const { setItemInEdit, setActiveTab, setEntries } = ctx;
 
   // format date string nicely
   const getWhenAdded = (dateStr: string | undefined) => {
@@ -27,12 +31,22 @@ function ViewAllEntry({ data }: Props) {
 
   // show edit form
   const showEdit = () => {
-    console.log("showEdit");
+    setItemInEdit(data); // remember current item
+    setActiveTab(0); // switch to tab 1
   };
 
   // prompt to delete entry
-  const promptDeletion = () => {
-    console.log("promptDeletion");
+  const promptDeletion = async () => {
+    const answer = confirm(
+      `Are you sure you want to delete this entry?\n\n${languages.find((x) => x.key === data.language)!["name"]} — ${
+        data.word
+      }\n\nCareful! This action cannot be undone.`
+    );
+    if (!answer) return;
+    if (data._id) {
+      const deletedSuccessfully = await deleteOneEntry(data._id);
+      if (deletedSuccessfully) await getUserEntries(setEntries);
+    }
   };
 
   // ============================================================================

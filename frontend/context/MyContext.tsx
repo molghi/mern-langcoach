@@ -16,7 +16,7 @@ export interface EntryInterface {
   img: string;
   example: string;
   note: string;
-  _id?: number;
+  _id?: number | string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -29,6 +29,8 @@ interface ContextInterface {
   setEntries: React.Dispatch<React.SetStateAction<EntryInterface[]>>;
   isLoggedIn: Boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<Boolean>>;
+  itemInEdit: EntryInterface | null;
+  setItemInEdit: React.Dispatch<React.SetStateAction<EntryInterface | null>>;
 }
 
 // my context
@@ -46,22 +48,24 @@ export const languages: { name: string; key: string }[] = [
   { name: "🇨🇿 Čeština", key: "czech" },
   { name: "🇺🇸 English", key: "english" },
   { name: "🇷🇺 Russkij (Русский)", key: "russian" },
-  // { name: "🇯🇵 nihongo", key: "japanese" },
+  { name: "🇯🇵 nihongo (日本語)", key: "japanese" },
   // { name: "🇧🇷 Português", key: "portuguese" },
   // { name: "🇮🇹 Italiano", key: "italian" },
 ];
 
+// colors associated with languages
 export const languageColors: Record<string, string> = {
   spanish: "gold",
   arabic: "green",
-  german: "black",
-  french: "blue",
-  chinese: "red",
-  icelandic: "light-blue",
+  german: "coral",
+  french: "dodgerblue",
+  chinese: "salmon",
+  icelandic: "cyan",
   turkish: "red",
-  czech: "blue",
-  english: "navy",
-  russian: "white",
+  czech: "#C060B9",
+  english: "#B22C4F",
+  russian: "MistyRose",
+  japanese: "#F0FFA5",
 };
 
 // =====================================================================================================
@@ -72,9 +76,12 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [activeTab, setActiveTab] = useState<number>(0); // 0=Add New, 1=View All, 2=Practice
   const [entries, setEntries] = useState<EntryInterface[]>([]); // init w/ type signature; for entries fetched from db
   const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(true);
+  const [itemInEdit, setItemInEdit] = useState<EntryInterface | null>(null);
 
   return (
-    <Context.Provider value={{ activeTab, setActiveTab, entries, setEntries, isLoggedIn, setIsLoggedIn }}>
+    <Context.Provider
+      value={{ activeTab, setActiveTab, entries, setEntries, isLoggedIn, setIsLoggedIn, itemInEdit, setItemInEdit }}
+    >
       {children}
     </Context.Provider>
   );

@@ -1,13 +1,21 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { createNewEntry, getUserEntries } = require("../controllers/EntryController");
+const { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry } = require("../controllers/EntryController");
 
 // ============================================================================
 
+// create new entry
 router.post("/entries", createNewEntry);
 
+// get user entries
 router.get("/entries", getUserEntries);
+
+// update one entry
+router.patch("/entries", updateOneEntry);
+
+// delete one entry
+router.delete("/entries", deleteOneEntry);
 
 // ============================================================================
 

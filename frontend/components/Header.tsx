@@ -4,7 +4,7 @@ import { Context } from "../context/MyContext";
 function Header() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("useContext used outside ContextProvider");
-  const { activeTab, setActiveTab, isLoggedIn } = ctx;
+  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit } = ctx;
 
   interface ButtonsInterface {
     name: string;
@@ -51,8 +51,9 @@ function Header() {
 
     setActiveTab(index);
 
+    setItemInEdit(null); // if header btn was clicked, always set 1st btn to "Add New" - 1st btn is only "Edit One" if it was clicked to edit in "View All"
+
     // if (key === "add_edit") {
-    //   console.log("Add new or edit existing");
     // }
     // if (key === "view_all") {
     //   console.log("View all");
@@ -81,7 +82,7 @@ function Header() {
                 key={el.key}
                 className={`${commonClasses} ${el.specialClasses} ${activeTab === i ? el.activeClasses : ""}`}
               >
-                {el.name}
+                {itemInEdit !== null && i === 0 ? "Edit One" : el.name}
               </button>
             ))
           ) : (
