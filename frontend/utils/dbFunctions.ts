@@ -4,12 +4,16 @@ import type { EntryInterface } from "../context/MyContext"; // import as type
 // ============================================================================
 
 // create one new entry
-async function createNewEntry(newEntryObj: EntryInterface, setError: React.Dispatch<React.SetStateAction<string>>) {
+async function createNewEntry(
+  newEntryObj: EntryInterface,
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setFlashMsgContent: React.Dispatch<React.SetStateAction<[string, string]>>
+) {
   try {
     const response = await axios.post("http://localhost:8000/entries", newEntryObj);
 
     if (response.status === 200) {
-      console.log("Created nicely!");
+      setFlashMsgContent(["success", "Word added!"]);
     }
   } catch (error) {
     console.log("🛑 ERROR:", error);
@@ -24,16 +28,19 @@ async function getUserEntries(
   setEntries: React.Dispatch<React.SetStateAction<EntryInterface[]>>,
   setLanguagesAdded: React.Dispatch<React.SetStateAction<string[]>>,
   setCategoriesAdded: React.Dispatch<React.SetStateAction<string[]>>,
-  parameter?: string
+  setAllEntriesCount: React.Dispatch<React.SetStateAction<number>>,
+  parameter?: string,
+  page: number = 1
 ) {
   try {
     if (!parameter) {
       // if no parameter -> fetching all, without filtering anything
-      const response = await axios.get("http://localhost:8000/entries");
+      const response = await axios.get(`http://localhost:8000/entries?page=${page}`);
 
       if (response.status === 200) {
         // set entries
         setEntries(response.data.entries);
+        setAllEntriesCount(response.data.allEntriesCount);
 
         // set quick summary for filter in View All
         setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
@@ -65,12 +72,16 @@ async function getUserEntries(
 // ============================================================================
 
 // update one entry
-async function updateOneEntry(entryObj: EntryInterface, setError: React.Dispatch<React.SetStateAction<string>>) {
+async function updateOneEntry(
+  entryObj: EntryInterface,
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setFlashMsgContent: React.Dispatch<React.SetStateAction<[string, string]>>
+) {
   try {
     const response = await axios.patch("http://localhost:8000/entries", entryObj);
 
     if (response.status === 200) {
-      console.log("Updated nicely!");
+      setFlashMsgContent(["success", "Word updated!"]);
       return true;
     }
     return false;
@@ -84,12 +95,15 @@ async function updateOneEntry(entryObj: EntryInterface, setError: React.Dispatch
 // ============================================================================
 
 // delete one entry
-async function deleteOneEntry(idToDelete: string | number) {
+async function deleteOneEntry(
+  idToDelete: string | number,
+  setFlashMsgContent: React.Dispatch<React.SetStateAction<[string, string]>>
+) {
   try {
     const response = await axios.delete(`http://localhost:8000/entries?id=${idToDelete}`);
 
     if (response.status === 200) {
-      console.log("Deleted nicely!");
+      setFlashMsgContent(["success", "Word deleted!"]);
       return true;
     }
     return false;

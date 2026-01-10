@@ -6,7 +6,7 @@ import type { EntryInterface } from "../context/MyContext";
 function AddEditForm() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("Incorrect context usage");
-  const { itemInEdit, setItemInEdit, setEntries } = ctx;
+  const { itemInEdit, setItemInEdit, setEntries, setFlashMsgContent } = ctx;
 
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const [word, setWord] = useState("");
@@ -135,7 +135,7 @@ function AddEditForm() {
     const newEntry: EntryInterface = { word, language, translation, definition, category, img, example, note };
 
     if (mode === "add") {
-      await createNewEntry(newEntry, setError); // add to db
+      await createNewEntry(newEntry, setError, setFlashMsgContent); // add to db
       // reset fields
       setWord("");
       setLanguage(languages[0].key);
@@ -151,7 +151,7 @@ function AddEditForm() {
 
     if (mode === "edit") {
       if (itemInEdit !== null) newEntry._id = itemInEdit._id;
-      const isUpdateSuccessful = await updateOneEntry(newEntry, setError);
+      const isUpdateSuccessful = await updateOneEntry(newEntry, setError, setFlashMsgContent);
       // if (isUpdateSuccessful) getUserEntries(setEntries); // no need to do that since I'm on tab 1
       if (isUpdateSuccessful) setItemInEdit(null); // switch mode back to Add
     }
@@ -190,14 +190,14 @@ function AddEditForm() {
                   autoComplete="off"
                   type="text"
                   id={el.key}
-                  className="bg-black/50 font-inherit bg-inherit text-inherit px-4 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 text-white focus:shadow-[0_0_15px_antiquewhite]"
+                  className="bg-black/50 font-inherit text-inherit px-4 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 text-white focus:shadow-[0_0_15px_antiquewhite]"
                 />
               ) : (
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                   id={el.key}
-                  className="min-h-[42px] bg-black/50 font-inherit bg-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
+                  className="min-h-[42px] bg-black/50 font-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
                 >
                   {languages.map((el, i) => (
                     <option value={el.key} key={i}>
@@ -214,7 +214,7 @@ function AddEditForm() {
         <div className="text-right">
           <button
             type="submit"
-            className="border border-[antiquewhite] text-[antiquewhite] text-[18px] min-w-[100px] px-[15px] py-[10px] rounded-xl transition duration-300 uppercase hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50"
+            className="border border-[antiquewhite] text-[antiquewhite] text-[18px] min-w-[100px] px-[15px] py-[10px] rounded-xl transition duration-300 uppercase hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50 bg-black/50"
           >
             {mode.toUpperCase()}
           </button>

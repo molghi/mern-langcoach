@@ -2,26 +2,20 @@ import { useState, useEffect, useContext } from "react";
 import { Context, languages } from "../context/MyContext";
 import { getUserEntries } from "../utils/dbFunctions";
 
-interface Props {
-  languagesAdded: string[];
-  whenAdded: string[];
-  categoriesAdded: string[];
-  setWhenAdded: React.Dispatch<React.SetStateAction<string[]>>;
-  setLanguagesAdded: React.Dispatch<React.SetStateAction<string[]>>;
-  setCategoriesAdded: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-function ViewAllFilter({
-  languagesAdded,
-  whenAdded,
-  categoriesAdded,
-  setWhenAdded,
-  setLanguagesAdded,
-  setCategoriesAdded,
-}: Props) {
+function ViewAllFilter() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("Incorrect context usage");
-  const { entries, setEntries } = ctx; // pull from context
+  const {
+    entries,
+    setEntries,
+    languagesAdded,
+    whenAdded,
+    categoriesAdded,
+    setWhenAdded,
+    setLanguagesAdded,
+    setCategoriesAdded,
+    setAllEntriesCount,
+  } = ctx; // pull from context
 
   const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
 
@@ -52,7 +46,13 @@ function ViewAllFilter({
     // fetch entries & update state
     const fetchAndFilter = async () => {
       try {
-        const response = await getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded, parameter);
+        const response = await getUserEntries(
+          setEntries,
+          setLanguagesAdded,
+          setCategoriesAdded,
+          setAllEntriesCount,
+          parameter
+        );
       } catch (error) {
         console.error(error);
       }
@@ -64,11 +64,11 @@ function ViewAllFilter({
 
   return (
     <div className="flex gap-4 items-center text-sm">
-      <span>Filter:</span>
+      <span className="font-bold opacity-50">Filter:</span>
       <select
         value={filterOption}
         onChange={(e) => setFilterOption(e.target.value)}
-        className="bg-black/50 font-inherit bg-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
+        className="bg-black/50 font-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
       >
         {/* <option disabled>Filter</option> */}
         <option value="show_all">Show All Entries</option>

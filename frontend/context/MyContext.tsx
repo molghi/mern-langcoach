@@ -31,6 +31,22 @@ interface ContextInterface {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<Boolean>>;
   itemInEdit: EntryInterface | null;
   setItemInEdit: React.Dispatch<React.SetStateAction<EntryInterface | null>>;
+  isLoading: Boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<Boolean>>;
+  flashMsgContent: [string, string];
+  setFlashMsgContent: React.Dispatch<React.SetStateAction<[string, string]>>;
+  languagesAdded: string[];
+  setLanguagesAdded: React.Dispatch<React.SetStateAction<string[]>>;
+  whenAdded: string[];
+  setWhenAdded: React.Dispatch<React.SetStateAction<string[]>>;
+  categoriesAdded: string[];
+  setCategoriesAdded: React.Dispatch<React.SetStateAction<string[]>>;
+  bgImg: string;
+  setBgImg: React.Dispatch<React.SetStateAction<string>>;
+  allEntriesCount: number;
+  setAllEntriesCount: React.Dispatch<React.SetStateAction<number>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // my context
@@ -68,6 +84,26 @@ export const languageColors: Record<string, string> = {
   japanese: "#F0FFA5",
 };
 
+// available choice for an animated bg
+export const availableBGs = {
+  "Snowing in the dusk": "snowing-in-the-dusk.gif",
+  // "snow-in-the-dark.gif": "snow-in-the-dark.gif",
+  "Heavy snow": "heavy-snow.gif",
+  "Snowing in the forest 2": "snowing-in-the-forest-2.gif",
+  "Snowing in the forest": "snowing-in-the-forest.gif",
+  "Snowy forest": "snowy-forest.gif",
+  "Snow lamppost": "snow-lamppost.gif",
+  "Snowing top": "snowing-top.gif",
+  "Snowy overcast": "snowy-overcast.gif",
+  "Snow trees": "snow-trees.gif",
+  "Snow black": "snow-black.gif",
+  "Snowy day": "snowy-day.gif",
+  // "Snowy day 2":"snowy-day-2.gif",
+  // "Snowy day 3":"snowy-day-3.gif",
+};
+
+export const localStorageBgKey = "langcoach_bg";
+
 // =====================================================================================================
 
 // wrapper
@@ -77,10 +113,43 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [entries, setEntries] = useState<EntryInterface[]>([]); // init w/ type signature; for entries fetched from db
   const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(true);
   const [itemInEdit, setItemInEdit] = useState<EntryInterface | null>(null);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [flashMsgContent, setFlashMsgContent] = useState<[string, string]>(["", ""]); // 1st str: msg type, 2nd str: msg text
+  const [languagesAdded, setLanguagesAdded] = useState<string[]>([]); // arr of added langs
+  const [whenAdded, setWhenAdded] = useState<string[]>([]); // arr of yyyy-mm periods
+  const [categoriesAdded, setCategoriesAdded] = useState<string[]>([]); // arr of added categories
+  const [bgImg, setBgImg] = useState<string>(""); // animated bg
+  const [allEntriesCount, setAllEntriesCount] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   return (
     <Context.Provider
-      value={{ activeTab, setActiveTab, entries, setEntries, isLoggedIn, setIsLoggedIn, itemInEdit, setItemInEdit }}
+      value={{
+        activeTab,
+        setActiveTab,
+        entries,
+        setEntries,
+        isLoggedIn,
+        setIsLoggedIn,
+        itemInEdit,
+        setItemInEdit,
+        isLoading,
+        setIsLoading,
+        flashMsgContent,
+        setFlashMsgContent,
+        languagesAdded,
+        setLanguagesAdded,
+        whenAdded,
+        setWhenAdded,
+        categoriesAdded,
+        setCategoriesAdded,
+        bgImg,
+        setBgImg,
+        allEntriesCount,
+        setAllEntriesCount,
+        currentPage,
+        setCurrentPage,
+      }}
     >
       {children}
     </Context.Provider>

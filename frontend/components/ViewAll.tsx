@@ -1,43 +1,54 @@
 import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
 import { getUserEntries } from "../utils/dbFunctions";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import { Context } from "../context/MyContext";
+import LoadingSpinner from "./LoadingSpinner";
 
 function ViewAll() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("Incorrect context usage.");
-  const { entries, setEntries } = ctx;
-
-  const [languagesAdded, setLanguagesAdded] = useState<string[]>([]); // arr of added langs
-  const [whenAdded, setWhenAdded] = useState<string[]>([]); // arr of yyyy-mm periods
-  const [categoriesAdded, setCategoriesAdded] = useState<string[]>([]); // arr of added categories
+  const {
+    entries,
+    setEntries,
+    isLoading,
+    setIsLoading,
+    setLanguagesAdded,
+    setCategoriesAdded,
+    allEntriesCount,
+    setAllEntriesCount,
+  } = ctx;
 
   useEffect(() => {
-    getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded);
+    const fetch = async () => {
+      setIsLoading(true);
+      await getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded, setAllEntriesCount);
+      setIsLoading(false);
+    };
+    fetch();
   }, []);
 
   return (
     <>
-      <div className="px-6 text-[antiquewhite] font-mono container max-w-4xl mx-auto">
+      <div className="px-6 text-[antiquewhite] font-mono container max-w-4xl mx-auto relative">
         {/* Title */}
-        <h2 className="text-center text-center my-10 font-bold text-3xl">Your Words</h2>
+        <h2 className="text-center text-center my-10 font-bold text-3xl">
+          <span className="bg-black/50 rounded-[5px] px-4 py-1.5">Your Words</span>
+        </h2>
 
         {/* Flexbox with two nav elements */}
-        <div className="flex justify-between items-center gap-4 mb-6">
+        <div className="flex justify-between items-center gap-4 mb-10">
           {/* How many entries */}
-          <div className="text-sm">Entries: {entries.length}</div>
+          <div className="text-sm">
+            <span className="font-bold opacity-50">Entries:</span> {entries.length} / {allEntriesCount}
+          </div>
 
           {/* Select filter */}
-          <ViewAllFilter
-            languagesAdded={languagesAdded}
-            whenAdded={whenAdded}
-            categoriesAdded={categoriesAdded}
-            setWhenAdded={setWhenAdded}
-            setLanguagesAdded={setLanguagesAdded}
-            setCategoriesAdded={setCategoriesAdded}
-          />
+          <ViewAllFilter />
         </div>
+
+        {/* Show loading spinner if fetching */}
+        {isLoading && <LoadingSpinner />}
 
         {/* Container with word elements */}
         <div className="flex flex-col gap-8">

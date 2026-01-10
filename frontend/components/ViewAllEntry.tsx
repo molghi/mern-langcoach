@@ -1,7 +1,7 @@
-import type { EntryInterface } from "../context/MyContext"; // import as type
-import { languages, languageColors, Context } from "../context/MyContext";
 import { useContext } from "react";
+import { languages, languageColors, Context } from "../context/MyContext";
 import { deleteOneEntry, getUserEntries } from "../utils/dbFunctions";
+import type { EntryInterface } from "../context/MyContext"; // import as type
 
 interface Props {
   data: EntryInterface;
@@ -10,7 +10,15 @@ interface Props {
 function ViewAllEntry({ data }: Props) {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("Incorrect context usage.");
-  const { setItemInEdit, setActiveTab, setEntries } = ctx;
+  const {
+    setItemInEdit,
+    setActiveTab,
+    setEntries,
+    setFlashMsgContent,
+    setLanguagesAdded,
+    setCategoriesAdded,
+    setAllEntriesCount,
+  } = ctx;
 
   // format date string nicely
   const getWhenAdded = (dateStr: string | undefined) => {
@@ -44,8 +52,9 @@ function ViewAllEntry({ data }: Props) {
     );
     if (!answer) return;
     if (data._id) {
-      const deletedSuccessfully = await deleteOneEntry(data._id);
-      if (deletedSuccessfully) await getUserEntries(setEntries);
+      const deletedSuccessfully = await deleteOneEntry(data._id, setFlashMsgContent);
+      if (deletedSuccessfully)
+        await getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded, setAllEntriesCount);
     }
   };
 
@@ -55,7 +64,7 @@ function ViewAllEntry({ data }: Props) {
     <div
       className={`border border-[${languageColors[data.language]}] text-[${
         languageColors[data.language]
-      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between word-entry-block`}
+      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between hover:bg-black/70 word-entry-block`}
     >
       {/* Fields */}
       <div className="flex flex-col gap-2">
@@ -113,8 +122,8 @@ function ViewAllEntry({ data }: Props) {
 
         {/* Created at */}
         <div className="text-[12px] transition duration-200 opacity-70 hover:opacity-100">
-          <span className="font-bold opacity-30">Added:</span>{" "}
-          <span className="opacity-30">{getWhenAdded(data.createdAt)}</span>
+          <span className="font-bold opacity-30 transition duration-300 hover:opacity-100">Added:</span>{" "}
+          <span className="opacity-30 transition duration-300 hover:opacity-100">{getWhenAdded(data.createdAt)}</span>
         </div>
       </div>
 

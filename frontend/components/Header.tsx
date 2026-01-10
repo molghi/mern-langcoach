@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../context/MyContext";
 
 function Header() {
@@ -53,24 +53,31 @@ function Header() {
 
     setItemInEdit(null); // if header btn was clicked, always set 1st btn to "Add New" - 1st btn is only "Edit One" if it was clicked to edit in "View All"
 
-    // if (key === "add_edit") {
-    // }
-    // if (key === "view_all") {
-    //   console.log("View all");
-    // }
-    // if (key === "practice") {
-    //   console.log("Init practice");
-    // }
-    // if (key === "logout") {
-    //   console.log("Log out");
-    // }
+    if (key === "logout") {
+      console.log("Log out");
+    }
   };
 
   // ============================================================================
 
+  useEffect(() => {
+    // change doc title
+    if (activeTab === 0) {
+      document.title = `LangCoach — Word Form`;
+    }
+    if (activeTab === 1) {
+      document.title = `LangCoach — Your Words`;
+    }
+    if (activeTab === 2) {
+      document.title = `LangCoach — Practice`;
+    }
+  }, [activeTab]);
+
+  // ============================================================================
+
   return (
-    <header className="border-b border-gray-700 font-mono">
-      <div className="container max-w-5xl mx-auto flex gap-x-8 gap-y-4 flex-wrap sm:flex-nowrap items-center justify-between px-6 py-4 bg-black text-[antiquewhite]">
+    <header className="font-mono bg-black/50">
+      <div className="container max-w-5xl mx-auto flex gap-x-8 gap-y-4 flex-wrap sm:flex-nowrap items-center justify-between px-6 py-4 text-[antiquewhite]">
         <div className="text-xl font-bold transition duration-300 hover:opacity-100 opacity-50">LangCoach</div>
 
         <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
