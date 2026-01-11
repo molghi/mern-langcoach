@@ -15,6 +15,9 @@ function ViewAllFilter() {
     setLanguagesAdded,
     setCategoriesAdded,
     setAllEntriesCount,
+    setIsLoading,
+    setCurrentPage,
+    setEntriesMatchingQueryCount,
   } = ctx; // pull from context
 
   const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
@@ -46,13 +49,19 @@ function ViewAllFilter() {
     // fetch entries & update state
     const fetchAndFilter = async () => {
       try {
+        setIsLoading(true);
+        // setCurrentPage(1);
         const response = await getUserEntries(
           setEntries,
           setLanguagesAdded,
           setCategoriesAdded,
           setAllEntriesCount,
-          parameter
+          setEntriesMatchingQueryCount,
+          parameter,
+          // filterOption === "show_all" ? currentPage : 1
+          1
         );
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -68,7 +77,7 @@ function ViewAllFilter() {
       <select
         value={filterOption}
         onChange={(e) => setFilterOption(e.target.value)}
-        className="bg-black/50 font-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
+        className="bg-black/50 font-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-500 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite] hover:shadow-[0_0_7px_antiquewhite]"
       >
         {/* <option disabled>Filter</option> */}
         <option value="show_all">Show All Entries</option>

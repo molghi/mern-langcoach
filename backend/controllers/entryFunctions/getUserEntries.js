@@ -2,7 +2,8 @@ const Entry = require("../../models/EntryModel");
 
 module.exports = async function getUserEntries(req, res) {
   try {
-    let response;
+    let response = null;
+    let entriesMatchingQuery = null;
     const entriesPerPage = 5; // hardcoded
     const pageRequested = Number(req.query.page);
 
@@ -12,12 +13,19 @@ module.exports = async function getUserEntries(req, res) {
         .sort({ createdAt: -1 })
         .skip((pageRequested - 1) * entriesPerPage) // skip this number of docs
         .limit(entriesPerPage); // limit output to this number of docs
+
+      entriesMatchingQuery = null;
     } else {
       // get CERTAIN user entries (filtered), newest first
       const [parameterKey, parameterValue] = req.query.filter.split("_");
       if (parameterKey === "language") {
         // fetch & filter by language
-        response = await Entry.find({ language: parameterValue }).sort({ createdAt: -1 });
+        response = await Entry.find({ language: parameterValue })
+          .sort({ createdAt: -1 })
+          .skip((pageRequested - 1) * entriesPerPage)
+          .limit(entriesPerPage);
+
+        entriesMatchingQuery = await Entry.countDocuments({ language: parameterValue });
       } else if (parameterKey === "period") {
         // fetch & filter by period
         const [year, month] = parameterValue.split("-"); // parameterValue looks like '2026-01'
@@ -30,10 +38,25 @@ module.exports = async function getUserEntries(req, res) {
             $gte: periodStart,
             $lte: periodEnd,
           },
-        }).sort({ createdAt: -1 });
+        })
+          .sort({ createdAt: -1 })
+          .skip((pageRequested - 1) * entriesPerPage)
+          .limit(entriesPerPage);
+
+        entriesMatchingQuery = await Entry.countDocuments({
+          createdAt: {
+            $gte: periodStart,
+            $lte: periodEnd,
+          },
+        });
       } else {
         // fetch & filter by category
-        response = await Entry.find({ category: parameterValue }).sort({ createdAt: -1 });
+        response = await Entry.find({ category: parameterValue })
+          .sort({ createdAt: -1 })
+          .skip((pageRequested - 1) * entriesPerPage)
+          .limit(entriesPerPage);
+
+        entriesMatchingQuery = await Entry.countDocuments({ category: parameterValue });
       }
     }
 
@@ -63,6 +86,7 @@ module.exports = async function getUserEntries(req, res) {
       languagesAdded,
       categoriesAdded,
       allEntriesCount,
+      entriesMatchingQueryCount: entriesMatchingQuery,
     });
   } catch (error) {
     console.error(error);

@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useContext } from "react";
 import { createNewEntry, getUserEntries, updateOneEntry } from "../utils/dbFunctions";
 import { Context, languages } from "../context/MyContext";
 import type { EntryInterface } from "../context/MyContext";
+import Button from "./Button";
 
 function AddEditForm() {
   const ctx = useContext(Context);
@@ -212,12 +213,13 @@ function AddEditForm() {
 
         {/* Button */}
         <div className="text-right">
-          <button
+          <Button
             type="submit"
-            className="border border-[antiquewhite] text-[antiquewhite] text-[18px] min-w-[100px] px-[15px] py-[10px] rounded-xl transition duration-300 uppercase hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50 bg-black/50"
+            className="min-w-[100px] px-[15px] py-[10px] hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50 bg-black/50"
+            style={{ fontSize: "18px", borderColor: "antiquewhite" }}
           >
             {mode.toUpperCase()}
-          </button>
+          </Button>
         </div>
       </form>
 

@@ -30,7 +30,7 @@ function Footer() {
           title="Select Background GIF"
           value={selectChoice}
           onChange={(e) => setSelectChoice(e.target.value)}
-          className="bg-black/50 font-inherit bg-inherit px-1 py-1 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite] opacity-50 hover:opacity-100 text-[12px]"
+          className="bg-black/50 font-inherit bg-inherit px-2 py-1 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite] opacity-50 hover:opacity-100 text-[12px]"
         >
           <option disabled>Select Background GIF</option>
           {/* Populate with options */}
@@ -42,7 +42,7 @@ function Footer() {
         </select>
 
         {/* Copy */}
-        <span className="transition duration-200 opacity-50 hover:opacity-100">© Jan 2026 LangCoach</span>
+        <span className="transition duration-200 opacity-30 hover:opacity-100">© Jan 2026 LangCoach</span>
       </div>
     </footer>
   );

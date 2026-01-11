@@ -1,16 +1,18 @@
 import { useContext, useEffect } from "react";
 import { Context } from "../context/MyContext";
+import Button from "./Button";
 
 function Header() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("useContext used outside ContextProvider");
-  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit } = ctx;
+  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit, setCurrentPage } = ctx;
 
   interface ButtonsInterface {
     name: string;
     key: string;
     specialClasses: string;
     activeClasses: string;
+    title?: string;
   }
 
   const buttonsConfig: ButtonsInterface[] = [
@@ -19,18 +21,21 @@ function Header() {
       key: "add_edit",
       specialClasses: "hover:bg-green-800",
       activeClasses: "bg-green-800",
+      title: "Or press Ctrl + 1",
     },
     {
       name: "View All",
       key: "view_all",
       specialClasses: "hover:bg-blue-800",
       activeClasses: "bg-blue-800",
+      title: "Or press Ctrl + 2",
     },
     {
       name: "Practice",
       key: "practice",
       specialClasses: "hover:bg-orange-800",
       activeClasses: "bg-orange-800",
+      title: "Or press Ctrl + 3",
     },
     {
       name: "Logout",
@@ -67,6 +72,7 @@ function Header() {
     }
     if (activeTab === 1) {
       document.title = `LangCoach — Your Words`;
+      setCurrentPage(1);
     }
     if (activeTab === 2) {
       document.title = `LangCoach — Practice`;
@@ -84,13 +90,14 @@ function Header() {
           {/* Output buttons if logged in */}
           {isLoggedIn ? (
             buttonsConfig.map((el, i) => (
-              <button
-                onClick={() => handleHeaderBtns(el.key, i)}
+              <Button
                 key={el.key}
+                onClick={() => handleHeaderBtns(el.key, i)}
                 className={`${commonClasses} ${el.specialClasses} ${activeTab === i ? el.activeClasses : ""}`}
+                title={el.title}
               >
                 {itemInEdit !== null && i === 0 ? "Edit One" : el.name}
-              </button>
+              </Button>
             ))
           ) : (
             <span className="transition duration-200 opacity-50 hover:opacity-100">Please sign in to use the app</span>

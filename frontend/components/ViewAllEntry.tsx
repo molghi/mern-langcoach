@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { languages, languageColors, Context } from "../context/MyContext";
 import { deleteOneEntry, getUserEntries } from "../utils/dbFunctions";
 import type { EntryInterface } from "../context/MyContext"; // import as type
+import Button from "./Button";
 
 interface Props {
   data: EntryInterface;
@@ -18,6 +19,7 @@ function ViewAllEntry({ data }: Props) {
     setLanguagesAdded,
     setCategoriesAdded,
     setAllEntriesCount,
+    setEntriesMatchingQueryCount,
   } = ctx;
 
   // format date string nicely
@@ -54,7 +56,13 @@ function ViewAllEntry({ data }: Props) {
     if (data._id) {
       const deletedSuccessfully = await deleteOneEntry(data._id, setFlashMsgContent);
       if (deletedSuccessfully)
-        await getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded, setAllEntriesCount);
+        await getUserEntries(
+          setEntries,
+          setLanguagesAdded,
+          setCategoriesAdded,
+          setAllEntriesCount,
+          setEntriesMatchingQueryCount
+        );
     }
   };
 
@@ -81,7 +89,8 @@ function ViewAllEntry({ data }: Props) {
 
         {/* Translation */}
         <div>
-          <span className="font-bold opacity-30">Translation:</span> <span>{data.translation}</span>
+          <span className="font-bold opacity-30">Translation:</span>{" "}
+          <span className="translation">{data.translation}</span>
         </div>
 
         {/* Definition */}
@@ -129,19 +138,21 @@ function ViewAllEntry({ data }: Props) {
 
       {/* Action buttons */}
       <div className="flex items-start gap-x-3">
-        <button
+        <Button
           onClick={showEdit}
-          className="text-sm px-3 py-1 transition duration-300 border border-gray-500 text-gray-500 rounded hover:bg-gray-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+          className="border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+          style={{ paddingTop: "0.35rem", paddingBottom: "0.35rem" }}
         >
           Edit
-        </button>
+        </Button>
 
-        <button
+        <Button
           onClick={promptDeletion}
-          className="text-sm px-3 py-1 transition duration-300 border border-red-500 text-red-400 rounded hover:bg-red-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+          className="border-red-500 text-red-400 hover:bg-red-500 hover:text-black active:opacity-30 opacity-50 hover:opacity-100"
+          style={{ paddingTop: "0.35rem", paddingBottom: "0.35rem" }}
         >
           Delete
-        </button>
+        </Button>
       </div>
     </div>
   );

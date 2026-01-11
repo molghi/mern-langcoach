@@ -2,7 +2,7 @@ import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
 import { getUserEntries } from "../utils/dbFunctions";
 import { useEffect, useContext } from "react";
-import { Context } from "../context/MyContext";
+import { Context, entriesPerPage } from "../context/MyContext";
 import LoadingSpinner from "./LoadingSpinner";
 
 function ViewAll() {
@@ -17,16 +17,29 @@ function ViewAll() {
     setCategoriesAdded,
     allEntriesCount,
     setAllEntriesCount,
+    currentPage,
+    setEntriesMatchingQueryCount,
+    entriesMatchingQueryCount,
   } = ctx;
 
   useEffect(() => {
     const fetch = async () => {
       setIsLoading(true);
-      await getUserEntries(setEntries, setLanguagesAdded, setCategoriesAdded, setAllEntriesCount);
+      await getUserEntries(
+        setEntries,
+        setLanguagesAdded,
+        setCategoriesAdded,
+        setAllEntriesCount,
+        setEntriesMatchingQueryCount,
+        undefined, // filter parameter is undefined = no filtering
+        currentPage
+      );
       setIsLoading(false);
     };
     fetch();
-  }, []);
+  }, [currentPage]);
+
+  const isShowingFilteredResults: boolean = Boolean(entriesMatchingQueryCount); // either showing filtered or unfiltered results
 
   return (
     <>
@@ -40,7 +53,11 @@ function ViewAll() {
         <div className="flex justify-between items-center gap-4 mb-10">
           {/* How many entries */}
           <div className="text-sm">
-            <span className="font-bold opacity-50">Entries:</span> {entries.length} / {allEntriesCount}
+            <span className="font-bold opacity-50">Entries:</span>
+            {` `}
+            {!isShowingFilteredResults
+              ? `${entriesPerPage * (currentPage - 1) + entries.length} / ${allEntriesCount}`
+              : `${entriesPerPage * (currentPage - 1) + entries.length} / ${entriesMatchingQueryCount}`}
           </div>
 
           {/* Select filter */}

@@ -29,39 +29,25 @@ async function getUserEntries(
   setLanguagesAdded: React.Dispatch<React.SetStateAction<string[]>>,
   setCategoriesAdded: React.Dispatch<React.SetStateAction<string[]>>,
   setAllEntriesCount: React.Dispatch<React.SetStateAction<number>>,
+  setEntriesMatchingQueryCount: React.Dispatch<React.SetStateAction<number>>,
   parameter?: string,
   page: number = 1
 ) {
   try {
-    if (!parameter) {
-      // if no parameter -> fetching all, without filtering anything
-      const response = await axios.get(`http://localhost:8000/entries?page=${page}`);
+    const filterQuery = !parameter ? "" : `filter=${parameter}&`;
+    // if no parameter --> fetch all, without filtering anything
+    // if parameter exists --> fetch & filter by certain field
 
-      if (response.status === 200) {
-        // set entries
-        setEntries(response.data.entries);
-        setAllEntriesCount(response.data.allEntriesCount);
+    const response = await axios.get(`http://localhost:8000/entries?${filterQuery}page=${page}`);
 
-        // set quick summary for filter in View All
-        setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
-        setCategoriesAdded(
-          response.data.categoriesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())
-        ); // get what categories are added
-      }
-    } else {
-      // if parameter exists, fetch & filter by certain field
-      const response = await axios.get(`http://localhost:8000/entries?filter=${parameter}`);
+    if (response.status === 200) {
+      setEntries(response.data.entries); // not all words but only currently paginated/portioned
+      setAllEntriesCount(response.data.allEntriesCount); // TOTAL words count that user has
+      setEntriesMatchingQueryCount(response.data.entriesMatchingQueryCount); // count for: words matching current filter query
 
-      if (response.status === 200) {
-        // set entries
-        setEntries(response.data.entries);
-
-        // set quick summary for filter in View All
-        setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
-        setCategoriesAdded(
-          response.data.categoriesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())
-        ); // get what categories are added
-      }
+      // set quick summary for filter in View All
+      setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
+      setCategoriesAdded(response.data.categoriesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what categories are added
     }
   } catch (error) {
     console.log("🛑 ERROR:", error);

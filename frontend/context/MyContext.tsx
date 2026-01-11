@@ -47,6 +47,8 @@ interface ContextInterface {
   setAllEntriesCount: React.Dispatch<React.SetStateAction<number>>;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  entriesMatchingQueryCount: number;
+  setEntriesMatchingQueryCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // my context
@@ -102,7 +104,8 @@ export const availableBGs = {
   // "Snowy day 3":"snowy-day-3.gif",
 };
 
-export const localStorageBgKey = "langcoach_bg";
+export const localStorageBgKey: string = "langcoach_bg";
+export const entriesPerPage: number = 5;
 
 // =====================================================================================================
 
@@ -121,6 +124,7 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [bgImg, setBgImg] = useState<string>(""); // animated bg
   const [allEntriesCount, setAllEntriesCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [entriesMatchingQueryCount, setEntriesMatchingQueryCount] = useState<number>(0);
 
   return (
     <Context.Provider
@@ -149,6 +153,8 @@ export default function ContextProvider({ children }: ContextProviderProps) {
         setAllEntriesCount,
         currentPage,
         setCurrentPage,
+        entriesMatchingQueryCount,
+        setEntriesMatchingQueryCount,
       }}
     >
       {children}
