@@ -72,7 +72,7 @@ function ViewAllEntry({ data }: Props) {
     <div
       className={`border border-[${languageColors[data.language]}] text-[${
         languageColors[data.language]
-      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between hover:bg-black/70 word-entry-block`}
+      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between hover:bg-black/70 flex-col sm:flex-row word-entry-block`}
     >
       {/* Fields */}
       <div className="flex flex-col gap-2">

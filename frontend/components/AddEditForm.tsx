@@ -161,9 +161,9 @@ function AddEditForm() {
   // ============================================================================
 
   return (
-    <div className="font-mono max-w-[700px] mx-auto">
+    <div className="font-mono max-w-[700px] mx-auto px-4 md:px-0">
       {/* Title */}
-      <h1 className="text-[antiquewhite] text-center my-10 font-bold text-3xl">
+      <h1 className="text-[antiquewhite] text-center my-10 font-bold text-2xl [@media(min-width:540px)]:text-3xl">
         <span className="bg-black/50 rounded-[5px] px-4 py-1.5">
           {mode.slice(0, 1).toUpperCase() + mode.slice(1).toLowerCase()} Word / Phrase
         </span>{" "}
@@ -171,7 +171,7 @@ function AddEditForm() {
 
       {/* Iterate and Generate Fields */}
       <form onSubmit={(e) => submitForm(e, mode)}>
-        <div className="grid grid-cols-2 gap-x-10 gap-y-8 mb-10">
+        <div className="grid sm:grid-cols-2 gap-x-10 gap-y-4 sm:gap-y-8 mb-10">
           {fieldsConfig.map((el, i) => (
             <div key={i} className="flex flex-col gap-[5px]">
               <label
@@ -215,7 +215,7 @@ function AddEditForm() {
         <div className="text-right">
           <Button
             type="submit"
-            className="min-w-[100px] px-[15px] py-[10px] hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50 bg-black/50"
+            className="min-w-[100%] sm:min-w-[100px] px-[15px] py-[10px] hover:text-black hover:bg-[antiquewhite] tracking-wider active:opacity-50 bg-black/50"
             style={{ fontSize: "18px", borderColor: "antiquewhite" }}
           >
             {mode.toUpperCase()}

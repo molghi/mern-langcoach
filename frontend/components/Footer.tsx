@@ -24,9 +24,10 @@ function Footer() {
 
   return (
     <footer className="font-mono bg-black/50">
-      <div className="container max-w-4xl mx-auto w-full text-[antiquewhite] text-sm text-center py-4 flex items-center justify-between">
+      <div className="container max-w-4xl mx-auto w-full text-[antiquewhite] text-center px-6 py-4 flex items-center justify-between flex-col sm:flex-row gap-3">
         {/* Change BG element */}
         <select
+          name="background-select"
           title="Select Background GIF"
           value={selectChoice}
           onChange={(e) => setSelectChoice(e.target.value)}
@@ -42,7 +43,7 @@ function Footer() {
         </select>
 
         {/* Copy */}
-        <span className="transition duration-200 opacity-30 hover:opacity-100">© Jan 2026 LangCoach</span>
+        <span className="transition duration-200 opacity-30 hover:opacity-100 text-[12px]">© Jan 2026 LangCoach</span>
       </div>
     </footer>
   );

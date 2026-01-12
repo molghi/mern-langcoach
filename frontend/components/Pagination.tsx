@@ -29,7 +29,7 @@ function Pagination() {
         Back
       </Button>
 
-      <span className="px-2 py-1 opacity-50 transition duration-300 hover:opacity-100">Page {currentPage}</span>
+      <span className="px-2 py-1 opacity-50 transition duration-300 hover:opacity-100 text-sm">Page {currentPage}</span>
 
       <Button
         onClick={() => handlePagination("next")}

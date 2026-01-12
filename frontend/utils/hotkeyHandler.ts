@@ -26,7 +26,6 @@ const hotkeyHandler = (
   if (activeTab === 1 && e.code === "ArrowLeft") {
     // paginate prev
     if (isOnFirstPage === false) {
-      console.log(`paginate prev`);
       setCurrentPage((prev) => prev - 1);
     }
   }
@@ -34,7 +33,6 @@ const hotkeyHandler = (
   if (activeTab === 1 && e.code === "ArrowRight") {
     // paginate next
     if (isOnLastPage === false) {
-      console.log(`paginate next`);
       setCurrentPage((prev) => prev + 1);
     }
   }

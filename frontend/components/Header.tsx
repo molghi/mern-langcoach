@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Context } from "../context/MyContext";
 import Button from "./Button";
+import { NavLink } from "react-router-dom";
 
 function Header() {
   const ctx = useContext(Context);
@@ -13,6 +14,7 @@ function Header() {
     specialClasses: string;
     activeClasses: string;
     title?: string;
+    link?: string;
   }
 
   const buttonsConfig: ButtonsInterface[] = [
@@ -22,6 +24,7 @@ function Header() {
       specialClasses: "hover:bg-green-800",
       activeClasses: "bg-green-800",
       title: "Or press Ctrl + 1",
+      link: "form",
     },
     {
       name: "View All",
@@ -29,6 +32,7 @@ function Header() {
       specialClasses: "hover:bg-blue-800",
       activeClasses: "bg-blue-800",
       title: "Or press Ctrl + 2",
+      link: "view-all",
     },
     {
       name: "Practice",
@@ -36,6 +40,7 @@ function Header() {
       specialClasses: "hover:bg-orange-800",
       activeClasses: "bg-orange-800",
       title: "Or press Ctrl + 3",
+      link: "practice",
     },
     {
       name: "Logout",
@@ -45,8 +50,7 @@ function Header() {
     },
   ];
 
-  const commonClasses: string =
-    "px-4 py-2 text-sm font-semibold rounded-md transition duration-200 border border-gray-600";
+  const commonClasses: string = "font-semibold rounded-md transition duration-200 border border-gray-600";
 
   // ============================================================================
 
@@ -83,21 +87,25 @@ function Header() {
 
   return (
     <header className="font-mono bg-black/50">
-      <div className="container max-w-5xl mx-auto flex gap-x-8 gap-y-4 flex-wrap sm:flex-nowrap items-center justify-between px-6 py-4 text-[antiquewhite]">
-        <div className="text-xl font-bold transition duration-300 hover:opacity-100 opacity-50">LangCoach</div>
+      <div className="container max-w-5xl mx-auto flex gap-x-8 gap-y-4 flex-wrap sm:flex-nowrap items-center justify-center [@media(min-width:540px)]:justify-between px-3 [@media(min-width:540px)]:px-6 py-4 text-[antiquewhite]">
+        {/* Logo */}
+        <div className="text-xl font-bold transition duration-300 hover:opacity-100 opacity-50 hidden [@media(min-width:540px)]:block">
+          LangCoach
+        </div>
 
-        <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
           {/* Output buttons if logged in */}
           {isLoggedIn ? (
             buttonsConfig.map((el, i) => (
-              <Button
-                key={el.key}
-                onClick={() => handleHeaderBtns(el.key, i)}
-                className={`${commonClasses} ${el.specialClasses} ${activeTab === i ? el.activeClasses : ""}`}
-                title={el.title}
-              >
-                {itemInEdit !== null && i === 0 ? "Edit One" : el.name}
-              </Button>
+              <NavLink key={el.key} to={el.link || ""}>
+                <Button
+                  onClick={() => handleHeaderBtns(el.key, i)}
+                  className={`${commonClasses} ${el.specialClasses} ${activeTab === i ? el.activeClasses : ""}`}
+                  title={el.title}
+                >
+                  {itemInEdit !== null && i === 0 ? "Edit One" : el.name}
+                </Button>
+              </NavLink>
             ))
           ) : (
             <span className="transition duration-200 opacity-50 hover:opacity-100">Please sign in to use the app</span>

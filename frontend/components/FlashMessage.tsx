@@ -44,7 +44,7 @@ function FlashMessage() {
   return (
     <div>
       <div
-        className={`fixed top-3 left-1/2 transform -translate-x-[120px] px-4 py-2 rounded-md shadow-lg z-50 border border-2 bg-black text-white font-bold transition duration-300 ${classes} ${
+        className={`font-mono fixed top-3 left-1/2 transform -translate-x-[120px] px-4 py-2 rounded-md shadow-lg z-50 border border-2 bg-black text-white font-bold transition duration-300 ${classes} ${
           msgType === "success" ? "border-green-700 text-green-400" : "border-red-700 text-red-400"
         }`}
       >

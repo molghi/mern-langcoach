@@ -15,7 +15,7 @@ function Button(props: Props) {
       type={type || "button"}
       title={title}
       onClick={onClick}
-      className={`px-4 py-2 text-sm font-semibold rounded-md transition duration-200 border border-gray-600 text-[antiquewhite] ${className}`}
+      className={`[@media(min-width:540px)]:px-4 px-2.5 py-2 text-[13px] sm:text-sm font-semibold rounded-md transition duration-200 border border-gray-600 text-[antiquewhite] ${className}`}
       style={style}
     >
       {children}
