@@ -102,4 +102,29 @@ async function deleteOneEntry(
 
 // ============================================================================
 
-export { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry };
+async function getAddedLangs(setAddedLangs: React.Dispatch<React.SetStateAction<string[]>>) {
+  try {
+    const response = await axios.get(`http://localhost:8000/languages`);
+    setAddedLangs(response.data.languages.map((x: any) => x._id));
+  } catch (error) {
+    console.log("🛑 ERROR:", error);
+  }
+}
+
+// ============================================================================
+
+async function fetchPracticeRounds(
+  chosenPracticeLanguage: string,
+  setCurrentPractice: React.Dispatch<React.SetStateAction<EntryInterface[]>>
+) {
+  try {
+    const response = await axios.get(`http://localhost:8000/practice?language=${chosenPracticeLanguage}`);
+    if (response.status === 200) setCurrentPractice(response.data.rounds);
+  } catch (error) {
+    console.log("🛑 ERROR:", error);
+  }
+}
+
+// ============================================================================
+
+export { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry, getAddedLangs, fetchPracticeRounds };

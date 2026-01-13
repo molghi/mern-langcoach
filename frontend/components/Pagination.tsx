@@ -1,11 +1,9 @@
-import { useContext } from "react";
-import { Context, entriesPerPage } from "../context/MyContext";
+import { entriesPerPage } from "../context/MyContext";
 import Button from "./Button";
+import useMyContext from "../hooks/useMyContext";
 
 function Pagination() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("useContext used outside ContextProvider");
-  const { currentPage, setCurrentPage, allEntriesCount } = ctx;
+  const { currentPage, setCurrentPage, allEntriesCount } = useMyContext();
 
   const totalPages: number = Math.ceil(allEntriesCount / entriesPerPage);
 

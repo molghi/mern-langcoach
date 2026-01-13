@@ -1,10 +1,14 @@
-import { useState, useEffect, useContext } from "react";
-import { Context, languages } from "../context/MyContext";
+import { useEffect } from "react";
+import { languages } from "../context/MyContext";
 import { getUserEntries } from "../utils/dbFunctions";
+import useMyContext from "../hooks/useMyContext";
 
-function ViewAllFilter() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage");
+interface Props {
+  filterOption: string;
+  setFilterOption: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function ViewAllFilter({ filterOption, setFilterOption }: Props) {
   const {
     entries,
     setEntries,
@@ -16,11 +20,9 @@ function ViewAllFilter() {
     setCategoriesAdded,
     setAllEntriesCount,
     setIsLoading,
-    setCurrentPage,
     setEntriesMatchingQueryCount,
-  } = ctx; // pull from context
-
-  const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
+    currentPage,
+  } = useMyContext(); // pull from context
 
   useEffect(() => {
     // to populate filter select with dates
@@ -58,8 +60,8 @@ function ViewAllFilter() {
           setAllEntriesCount,
           setEntriesMatchingQueryCount,
           parameter,
+          currentPage
           // filterOption === "show_all" ? currentPage : 1
-          1
         );
         setIsLoading(false);
       } catch (error) {
@@ -67,7 +69,7 @@ function ViewAllFilter() {
       }
     };
     fetchAndFilter();
-  }, [filterOption]);
+  }, [filterOption, currentPage]);
 
   // ============================================================================
 

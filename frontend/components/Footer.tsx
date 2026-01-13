@@ -1,12 +1,10 @@
-import { useState, useEffect, useContext } from "react";
-import { Context } from "../context/MyContext";
+import { useState, useEffect } from "react";
 import { availableBGs } from "../context/MyContext";
 import { localStorageBgKey } from "../context/MyContext";
+import useMyContext from "../hooks/useMyContext";
 
 function Footer() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage");
-  const { setBgImg } = ctx; // pull from context
+  const { setBgImg } = useMyContext(); // pull from context
 
   const [selectChoice, setSelectChoice] = useState<string>(
     localStorage.getItem(localStorageBgKey) ?? Object.entries(availableBGs)[0][1]

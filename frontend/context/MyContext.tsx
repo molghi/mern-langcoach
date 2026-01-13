@@ -49,6 +49,14 @@ interface ContextInterface {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   entriesMatchingQueryCount: number;
   setEntriesMatchingQueryCount: React.Dispatch<React.SetStateAction<number>>;
+  chosenPracticeLanguage: string;
+  setChosenPracticeLanguage: React.Dispatch<React.SetStateAction<string>>;
+  currentPractice: EntryInterface[];
+  setCurrentPractice: React.Dispatch<React.SetStateAction<EntryInterface[]>>;
+  currentPracticeCounter: number;
+  setCurrentPracticeCounter: React.Dispatch<React.SetStateAction<number>>;
+  quizAnswers: string[];
+  setQuizAnswers: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 // my context
@@ -125,6 +133,10 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [allEntriesCount, setAllEntriesCount] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [entriesMatchingQueryCount, setEntriesMatchingQueryCount] = useState<number>(0);
+  const [chosenPracticeLanguage, setChosenPracticeLanguage] = useState<string>("");
+  const [currentPractice, setCurrentPractice] = useState<EntryInterface[]>([]); // current practice rounds
+  const [currentPracticeCounter, setCurrentPracticeCounter] = useState<number>(0);
+  const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
 
   return (
     <Context.Provider
@@ -155,6 +167,14 @@ export default function ContextProvider({ children }: ContextProviderProps) {
         setCurrentPage,
         entriesMatchingQueryCount,
         setEntriesMatchingQueryCount,
+        chosenPracticeLanguage,
+        setChosenPracticeLanguage,
+        currentPractice,
+        setCurrentPractice,
+        currentPracticeCounter,
+        setCurrentPracticeCounter,
+        quizAnswers,
+        setQuizAnswers,
       }}
     >
       {children}

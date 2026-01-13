@@ -6,4 +6,8 @@ const updateOneEntry = require("./entryFunctions/updateOneEntry");
 
 const deleteOneEntry = require("./entryFunctions/deleteOneEntry");
 
-module.exports = { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry };
+const getAddedLangs = require("./entryFunctions/getAddedLangs");
+
+const getPracticeRounds = require("./entryFunctions/getPracticeRounds");
+
+module.exports = { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry, getAddedLangs, getPracticeRounds };

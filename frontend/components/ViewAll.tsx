@@ -1,13 +1,12 @@
 import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
 import { getUserEntries } from "../utils/dbFunctions";
-import { useEffect, useContext } from "react";
-import { Context, entriesPerPage } from "../context/MyContext";
+import { useEffect, useState } from "react";
+import { entriesPerPage } from "../context/MyContext";
 import LoadingSpinner from "./LoadingSpinner";
+import useMyContext from "../hooks/useMyContext";
 
 function ViewAll() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage.");
   const {
     entries,
     setEntries,
@@ -20,7 +19,9 @@ function ViewAll() {
     currentPage,
     setEntriesMatchingQueryCount,
     entriesMatchingQueryCount,
-  } = ctx; // pull from context
+  } = useMyContext(); // pull from context
+
+  const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
 
   useEffect(() => {
     // fetch entries upon init mount and curPage change
@@ -32,7 +33,7 @@ function ViewAll() {
         setCategoriesAdded,
         setAllEntriesCount,
         setEntriesMatchingQueryCount,
-        undefined, // filter parameter is undefined = no filtering
+        filterOption,
         currentPage
       );
       setIsLoading(false);
@@ -61,7 +62,7 @@ function ViewAll() {
           </div>
 
           {/* Select filter */}
-          <ViewAllFilter />
+          <ViewAllFilter filterOption={filterOption} setFilterOption={setFilterOption} />
         </div>
 
         {/* Show loading spinner if fetching */}

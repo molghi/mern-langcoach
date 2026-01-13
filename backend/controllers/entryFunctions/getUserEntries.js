@@ -35,6 +35,8 @@ module.exports = async function getUserEntries(req, res) {
 
     const allEntriesCount = await Entry.countDocuments(); // get total entries count
 
+    if (!response) response = []; // safeguard
+
     return res.status(200).json({
       msg: "Entries returned!",
       entries: response,

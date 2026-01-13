@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { languages, languageColors, Context } from "../context/MyContext";
+import { languages, languageColors } from "../context/MyContext";
+import useMyContext from "../hooks/useMyContext";
 import { deleteOneEntry, getUserEntries } from "../utils/dbFunctions";
 import type { EntryInterface } from "../context/MyContext"; // import as type
 import Button from "./Button";
@@ -9,8 +9,6 @@ interface Props {
 }
 
 function ViewAllEntry({ data }: Props) {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage.");
   const {
     setItemInEdit,
     setActiveTab,
@@ -20,7 +18,7 @@ function ViewAllEntry({ data }: Props) {
     setCategoriesAdded,
     setAllEntriesCount,
     setEntriesMatchingQueryCount,
-  } = ctx;
+  } = useMyContext();
 
   // format date string nicely
   const getWhenAdded = (dateStr: string | undefined) => {

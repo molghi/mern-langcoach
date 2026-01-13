@@ -1,13 +1,12 @@
-import { useRef, useEffect, useState, useContext } from "react";
-import { createNewEntry, getUserEntries, updateOneEntry } from "../utils/dbFunctions";
-import { Context, languages } from "../context/MyContext";
+import { useRef, useEffect, useState } from "react";
+import { createNewEntry, updateOneEntry } from "../utils/dbFunctions";
+import { languages } from "../context/MyContext";
 import type { EntryInterface } from "../context/MyContext";
 import Button from "./Button";
+import useMyContext from "../hooks/useMyContext";
 
 function AddEditForm() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage");
-  const { itemInEdit, setItemInEdit, setEntries, setFlashMsgContent } = ctx;
+  const { itemInEdit, setItemInEdit, setFlashMsgContent } = useMyContext();
 
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const [word, setWord] = useState("");

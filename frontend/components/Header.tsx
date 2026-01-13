@@ -1,12 +1,12 @@
-import { useContext, useEffect } from "react";
-import { Context } from "../context/MyContext";
+import { useEffect } from "react";
 import Button from "./Button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import useMyContext from "../hooks/useMyContext";
 
 function Header() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("useContext used outside ContextProvider");
-  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit, setCurrentPage } = ctx;
+  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit, setCurrentPage } = useMyContext();
+
+  const navigate = useNavigate();
 
   interface ButtonsInterface {
     name: string;
@@ -73,13 +73,16 @@ function Header() {
     // change doc title
     if (activeTab === 0) {
       document.title = `LangCoach — Word Form`;
+      navigate("/form");
     }
     if (activeTab === 1) {
       document.title = `LangCoach — Your Words`;
       setCurrentPage(1);
+      navigate("/view-all");
     }
     if (activeTab === 2) {
       document.title = `LangCoach — Practice`;
+      navigate("/practice");
     }
   }, [activeTab]);
 

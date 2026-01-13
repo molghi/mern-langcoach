@@ -1,10 +1,8 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import { Context } from "../context/MyContext";
+import { useEffect, useState, useRef } from "react";
+import useMyContext from "../hooks/useMyContext";
 
 function BackgroundImage() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage");
-  const { bgImg } = ctx; // pull from context
+  const { bgImg } = useMyContext(); // pull from context
 
   const bgEl = useRef<HTMLImageElement | null>(null);
 
