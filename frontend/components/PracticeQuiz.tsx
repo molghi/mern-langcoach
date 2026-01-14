@@ -9,7 +9,7 @@ function PracticeQuiz() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [inputVal, setInputVal] = useState<string>("");
-  const [btnText, setBtnText] = useState<string>("Next");
+  const [btnText, setBtnText] = useState<string>("Next"); // either Next or Finish
 
   useEffect(() => {
     setInputVal(""); // reset input
@@ -32,16 +32,16 @@ function PracticeQuiz() {
 
     if (currentPracticeCounter + 1 === currentPractice.length) {
       // because currentPracticeCounter is zero-based --> quiz is finished
-      console.log(`render quiz results`);
+      // render quiz results
     } else {
-      console.log(`render next round`);
+      // render next round
       setCurrentPracticeCounter((prev) => prev + 1);
     }
   };
 
-  const currentRoundData = currentPractice[currentPracticeCounter];
-
   // ============================================================================
+
+  const currentRoundData = currentPractice[currentPracticeCounter];
 
   return (
     <>

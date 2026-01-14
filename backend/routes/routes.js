@@ -8,6 +8,7 @@ const {
   deleteOneEntry,
   getAddedLangs,
   getPracticeRounds,
+  updateRevisionDates,
 } = require("../controllers/EntryController");
 
 // ============================================================================
@@ -28,6 +29,8 @@ router.delete("/entries", deleteOneEntry);
 router.get("/languages", getAddedLangs);
 
 router.get("/practice", getPracticeRounds);
+
+router.patch("/entries_quiz", updateRevisionDates);
 
 // ============================================================================
 

@@ -2,23 +2,30 @@ import Button from "./Button";
 import { languages } from "../context/MyContext";
 import useMyContext from "../hooks/useMyContext";
 import { fetchPracticeRounds } from "../utils/dbFunctions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   addedLangs: string[];
 }
 
 function PracticeLangChoice({ addedLangs }: Props) {
-  const { chosenPracticeLanguage, setChosenPracticeLanguage, setCurrentPractice, setIsLoading } = useMyContext();
+  const { chosenPracticeLanguage, setChosenPracticeLanguage, currentPractice, setCurrentPractice, setIsLoading } =
+    useMyContext();
+
+  const [error, setError] = useState<string>(""); // error or info message to show in UI
 
   useEffect(() => {
-    setChosenPracticeLanguage(""); // reset value
+    setChosenPracticeLanguage(""); // reset value of chosen lang
   }, []);
 
   const fetchPractice = async () => {
+    setError("");
     setIsLoading(true);
     await fetchPracticeRounds(chosenPracticeLanguage, setCurrentPractice);
     setIsLoading(false);
+    // if nothing was fetched, all words were practiced
+    if (currentPractice.length === 0)
+      setError("All words in this language have been practiced. Wait for the next revision or add new words.");
   };
 
   // ============================================================================
@@ -43,7 +50,7 @@ function PracticeLangChoice({ addedLangs }: Props) {
                   key={i}
                   title={x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase()}
                   onClick={() => setChosenPracticeLanguage(x)}
-                  className={`hover:text-black hover:bg-[antiquewhite] active:opacity-50 ${
+                  className={`bg-black/50 hover:text-black hover:bg-[antiquewhite] active:opacity-50 ${
                     chosenPracticeLanguage === x ? "text-black bg-[antiquewhite]" : ""
                   }`}
                   style={{ fontSize: "20px", padding: "15px 20px", lineHeight: "1.75rem" }}
@@ -70,6 +77,13 @@ function PracticeLangChoice({ addedLangs }: Props) {
                 Begin
               </Button>
             </div>
+
+            {/* Output possible errors/info msgs */}
+            {error && (
+              <div className="mt-10 text-[coral] bg-black/50 rounded-[5px] px-4 py-1.5 text-green-500">
+                <span className="font-bold opacity-60">Message:</span> {error}
+              </div>
+            )}
           </>
         )}
       </div>

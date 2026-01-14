@@ -127,4 +127,55 @@ async function fetchPracticeRounds(
 
 // ============================================================================
 
-export { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry, getAddedLangs, fetchPracticeRounds };
+// implement spaced repetition and save to db
+async function saveQuizResults(currentPractice: EntryInterface[], ratings: any[]) {
+  // calc spacedRep nextDateRevision -- and update db with it
+  const idAndNextRevision: Record<string, string> = {};
+  const now = new Date().getTime();
+  currentPractice.forEach((roundObj) => {
+    const currentRating = ratings.find((entry) => entry[0] === roundObj.word)[1];
+    let nextRevDate = now;
+
+    switch (currentRating) {
+      case "Fail":
+        nextRevDate = now + 5 * 60 * 1000; // 5 min in secs
+        break;
+      case "Hard":
+        nextRevDate = now + 30 * 60 * 1000; // 30 min in secs
+        break;
+      case "Good":
+        nextRevDate = now + 24 * 60 * 60 * 1000; // 24 hrs (1 day) in secs
+        break;
+      case "Easy":
+        nextRevDate = now + 5 * 24 * 60 * 60 * 1000; // 5 days in secs
+        break;
+      default:
+        break;
+    }
+
+    if (roundObj._id) {
+      idAndNextRevision[roundObj._id.toString()] = String(nextRevDate);
+    }
+  });
+
+  try {
+    const response = await axios.patch("http://localhost:8000/entries_quiz", { data: idAndNextRevision });
+    if (response.status === 200) return true;
+    else return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+// ============================================================================
+
+export {
+  createNewEntry,
+  getUserEntries,
+  updateOneEntry,
+  deleteOneEntry,
+  getAddedLangs,
+  fetchPracticeRounds,
+  saveQuizResults,
+};

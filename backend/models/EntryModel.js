@@ -44,6 +44,11 @@ const entrySchema = mongoose.Schema(
       required: false,
       default: "",
     },
+    nextRevisionDate: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
   },
   {
     timestamps: true,

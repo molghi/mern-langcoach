@@ -10,4 +10,14 @@ const getAddedLangs = require("./entryFunctions/getAddedLangs");
 
 const getPracticeRounds = require("./entryFunctions/getPracticeRounds");
 
-module.exports = { createNewEntry, getUserEntries, updateOneEntry, deleteOneEntry, getAddedLangs, getPracticeRounds };
+const updateRevisionDates = require("./entryFunctions/updateRevisionDates");
+
+module.exports = {
+  createNewEntry,
+  getUserEntries,
+  updateOneEntry,
+  deleteOneEntry,
+  getAddedLangs,
+  getPracticeRounds,
+  updateRevisionDates,
+};
