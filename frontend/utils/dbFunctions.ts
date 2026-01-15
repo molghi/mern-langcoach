@@ -38,6 +38,7 @@ async function getUserEntries(
     // if no parameter --> fetch all, without filtering anything
     // if parameter exists --> fetch & filter by certain field
 
+    axios.defaults.withCredentials = true;
     const response = await axios.get(`http://localhost:8000/entries?${filterQuery}page=${page}`);
 
     if (response.status === 200) {
@@ -48,10 +49,14 @@ async function getUserEntries(
       // set quick summary for filter in View All
       setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
       setCategoriesAdded(response.data.categoriesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what categories are added
+
+      return true; // meaning authorized, logged in, there is a jwt cookie
     }
+    return false;
   } catch (error) {
     console.log("🛑 ERROR:", error);
     // setError(error);
+    return false;
   }
 }
 

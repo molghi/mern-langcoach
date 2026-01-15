@@ -10,27 +10,50 @@ const {
   getPracticeRounds,
   updateRevisionDates,
 } = require("../controllers/EntryController");
+const { signUp, logIn, logOut, checkAuth } = require("../controllers/UserController");
+const auth = require("../middleware/auth");
 
 // ============================================================================
 
+// ENTRIES CRUD
 // create new entry
-router.post("/entries", createNewEntry);
+router.post("/entries", auth, createNewEntry);
 
 // get user entries
-router.get("/entries", getUserEntries);
+router.get("/entries", auth, getUserEntries);
 
 // update one entry
-router.patch("/entries", updateOneEntry);
+router.patch("/entries", auth, updateOneEntry);
 
 // delete one entry
-router.delete("/entries", deleteOneEntry);
+router.delete("/entries", auth, deleteOneEntry);
 
+//
+
+// OTHER DB READING
 // get what langs are added
-router.get("/languages", getAddedLangs);
+router.get("/languages", auth, getAddedLangs);
 
-router.get("/practice", getPracticeRounds);
+// fetch practice rounds for practice
+router.get("/practice", auth, getPracticeRounds);
 
-router.patch("/entries_quiz", updateRevisionDates);
+// update entries after quiz finished
+router.patch("/entries_quiz", auth, updateRevisionDates);
+
+//
+
+// USER FUNCTIONS
+// create a user
+router.post("/signup", signUp);
+
+// log user in
+router.post("/login", logIn);
+
+// log user out
+router.get("/logout", auth, logOut);
+
+// check if logged in or not -- redundant, auth does it
+// router.get("/check-auth", checkAuth);
 
 // ============================================================================
 

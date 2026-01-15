@@ -2,9 +2,22 @@ import { useEffect } from "react";
 import Button from "./Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import useMyContext from "../hooks/useMyContext";
+import { logOut } from "../utils/userDbFunctions";
 
 function Header() {
-  const { activeTab, setActiveTab, isLoggedIn, itemInEdit, setItemInEdit, setCurrentPage } = useMyContext();
+  const {
+    activeTab,
+    setActiveTab,
+    isLoggedIn,
+    itemInEdit,
+    setItemInEdit,
+    setCurrentPage,
+    setCurrentPractice,
+    setCurrentPracticeCounter,
+    userEmail,
+    setIsLoggedIn,
+    setFlashMsgContent,
+  } = useMyContext();
 
   const navigate = useNavigate();
 
@@ -16,6 +29,8 @@ function Header() {
     title?: string;
     link?: string;
   }
+
+  // ============================================================================
 
   const buttonsConfig: ButtonsInterface[] = [
     {
@@ -47,6 +62,7 @@ function Header() {
       key: "logout",
       specialClasses: "bg-gray-800 opacity-40 hover:opacity-100",
       activeClasses: "",
+      title: `Logged in as ${userEmail || "..."}`,
     },
   ];
 
@@ -55,7 +71,7 @@ function Header() {
   // ============================================================================
 
   // handle clicks on header btns
-  const handleHeaderBtns = (key: string, index: number) => {
+  const handleHeaderBtns = async (key: string, index: number) => {
     if (!buttonsConfig.map((x) => x.key).includes(key)) return; // if it's not a defined config action, stop
 
     setActiveTab(index);
@@ -63,7 +79,11 @@ function Header() {
     setItemInEdit(null); // if header btn was clicked, always set 1st btn to "Add New" - 1st btn is only "Edit One" if it was clicked to edit in "View All"
 
     if (key === "logout") {
-      console.log("Log out");
+      const logoutSuccessful: boolean = await logOut();
+      if (logoutSuccessful) {
+        setIsLoggedIn(false);
+        setFlashMsgContent(["success", "Logged out!"]);
+      }
     }
   };
 
@@ -82,6 +102,8 @@ function Header() {
     }
     if (activeTab === 2) {
       document.title = `LangCoach — Practice`;
+      setCurrentPractice([]); // if switching to Practice and there was some practice, it resets
+      setCurrentPracticeCounter(0);
       navigate("/practice");
     }
   }, [activeTab]);

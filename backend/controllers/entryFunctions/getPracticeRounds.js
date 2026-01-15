@@ -17,7 +17,7 @@ module.exports = async function getPracticeRounds(req, res) {
         $match: {
           language: practiceLanguage, // match language
           // nextRevisionDate must be either right now or in the past or undefined:
-          $or: [{ nextRevisionDate: { $lte: now } }, { nextRevisionDate: { $exists: false } }],
+          $or: [{ nextRevisionDate: { $lte: now } }, { nextRevisionDate: { $exists: false } }, { nextRevisionDate: 0 }],
         },
       },
       { $sample: { size: numberOfRounds } }, // $sample returns random documents & requires an aggregation pipeline

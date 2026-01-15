@@ -57,6 +57,8 @@ interface ContextInterface {
   setCurrentPracticeCounter: React.Dispatch<React.SetStateAction<number>>;
   quizAnswers: string[];
   setQuizAnswers: React.Dispatch<React.SetStateAction<string[]>>;
+  userEmail: string;
+  setUserEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // my context
@@ -122,7 +124,7 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   /* fields here (2) */
   const [activeTab, setActiveTab] = useState<number>(0); // 0=Add New, 1=View All, 2=Practice
   const [entries, setEntries] = useState<EntryInterface[]>([]); // init w/ type signature; for entries fetched from db
-  const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(false);
   const [itemInEdit, setItemInEdit] = useState<EntryInterface | null>(null);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [flashMsgContent, setFlashMsgContent] = useState<[string, string]>(["", ""]); // 1st str: msg type, 2nd str: msg text
@@ -137,6 +139,7 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [currentPractice, setCurrentPractice] = useState<EntryInterface[]>([]); // current practice rounds
   const [currentPracticeCounter, setCurrentPracticeCounter] = useState<number>(0);
   const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
+  const [userEmail, setUserEmail] = useState<string>("");
 
   return (
     <Context.Provider
@@ -175,6 +178,8 @@ export default function ContextProvider({ children }: ContextProviderProps) {
         setCurrentPracticeCounter,
         quizAnswers,
         setQuizAnswers,
+        userEmail,
+        setUserEmail,
       }}
     >
       {children}

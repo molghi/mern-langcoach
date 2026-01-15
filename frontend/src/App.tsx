@@ -6,10 +6,12 @@ import Practice from "../components/Practice";
 import FlashMessage from "../components/FlashMessage";
 import BackgroundImage from "../components/BackgroundImage";
 import Pagination from "../components/Pagination";
+import AuthForms from "../components/AuthForms";
 import { useContext, useEffect, useState } from "react";
 import { Context, entriesPerPage } from "../context/MyContext";
 import hotkeyHandler from "../utils/hotkeyHandler";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { getUserEntries } from "../utils/dbFunctions";
 
 // create Layout where your Outlet (route content) will be inserted
 function Layout() {
@@ -26,6 +28,9 @@ function Layout() {
   );
 }
 
+// ============================================================================
+
+// main component here
 function App() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("Incorrect context usage");
@@ -38,11 +43,19 @@ function App() {
     setCurrentPage,
     allEntriesCount,
     entriesMatchingQueryCount,
+    setEntries,
+    setLanguagesAdded,
+    setCategoriesAdded,
+    setAllEntriesCount,
+    setEntriesMatchingQueryCount,
+    setIsLoggedIn,
   } = ctx; // pull from context
 
   const [isOnFirstPage, setIsOnFirstPage] = useState<boolean>(true);
   const [isOnLastPage, setIsOnLastPage] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState<number>(0);
+
+  // ============================================================================
 
   // init react router
   const router = createBrowserRouter([
@@ -50,8 +63,14 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { path: "", element: <AddEditForm /> },
-        { path: "form", element: <AddEditForm /> },
+        {
+          path: "",
+          element: <>{isLoggedIn ? <AddEditForm /> : <AuthForms />}</>,
+        },
+        {
+          path: "form",
+          element: <>{isLoggedIn ? <AddEditForm /> : <AuthForms />}</>,
+        },
         {
           path: "view-all",
           element: (
@@ -66,6 +85,8 @@ function App() {
     },
   ]);
 
+  // ============================================================================
+
   useEffect(() => {
     // check current location: if on 1st page, or if on last page
     const isShowingFilteredResults: boolean = Boolean(entriesMatchingQueryCount); // either showing filtered or unfiltered results
@@ -77,6 +98,8 @@ function App() {
     setIsOnLastPage(currentPage === allPages);
   }, [entries, activeTab]);
 
+  // ============================================================================
+
   useEffect(() => {
     const callback = (e: KeyboardEvent) =>
       hotkeyHandler(e, activeTab, setActiveTab, isOnFirstPage, isOnLastPage, setCurrentPage); // must be defined outside to make ref stable
@@ -85,6 +108,31 @@ function App() {
 
     return () => document.removeEventListener("keydown", callback); // cleanup on unmount
   }, [activeTab, isOnFirstPage, isOnLastPage]);
+
+  // ============================================================================
+
+  useEffect(() => {
+    // attempt fetching user entries and return if authorized/logged in or not
+    const initFetch = async () => {
+      const pageToShow = 1;
+      const filterParameter = "show_all";
+      const authorized: boolean = await getUserEntries(
+        setEntries,
+        setLanguagesAdded,
+        setCategoriesAdded,
+        setAllEntriesCount,
+        setEntriesMatchingQueryCount,
+        filterParameter,
+        pageToShow
+      );
+      if (authorized) {
+        setIsLoggedIn(true);
+      }
+    };
+    initFetch();
+  }, []);
+
+  // ============================================================================
 
   return (
     <>
