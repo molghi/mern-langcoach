@@ -9,6 +9,7 @@ const {
   getAddedLangs,
   getPracticeRounds,
   updateRevisionDates,
+  exportEntries,
 } = require("../controllers/EntryController");
 const { signUp, logIn, logOut, checkAuth } = require("../controllers/UserController");
 const auth = require("../middleware/auth");
@@ -39,6 +40,9 @@ router.get("/practice", auth, getPracticeRounds);
 
 // update entries after quiz finished
 router.patch("/entries_quiz", auth, updateRevisionDates);
+
+// do export
+router.get("/export", auth, exportEntries);
 
 //
 

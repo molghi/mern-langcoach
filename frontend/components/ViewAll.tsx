@@ -1,6 +1,6 @@
 import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
-import { getUserEntries } from "../utils/dbFunctions";
+import { getUserEntries } from "../utils/entryDbFunctions";
 import { useEffect, useState } from "react";
 import { entriesPerPage } from "../context/MyContext";
 import LoadingSpinner from "./LoadingSpinner";
@@ -19,6 +19,7 @@ function ViewAll() {
     currentPage,
     setEntriesMatchingQueryCount,
     entriesMatchingQueryCount,
+    setUserEmail,
   } = useMyContext(); // pull from context
 
   const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
@@ -33,6 +34,7 @@ function ViewAll() {
         setCategoriesAdded,
         setAllEntriesCount,
         setEntriesMatchingQueryCount,
+        setUserEmail,
         filterOption,
         currentPage
       );
@@ -73,7 +75,19 @@ function ViewAll() {
           {entries && entries.length > 0 ? (
             entries.map((el) => <ViewAllEntry key={el._id} data={el} />)
           ) : (
-            <div className="text-center italic">Your entries will be here.</div>
+            <div className="max-w-2xl mx-auto bg-black/60 rounded-[5px] py-5 px-6">
+              <div className="font-bold mb-3">No words as of now. You can:</div>
+              <ul className="list-disc list-inside space-y-1 text-left italic">
+                <li className="transition duration-200 opacity-70 hover:opacity-100">Add new words or phrases</li>
+                <li className="transition duration-200 opacity-70 hover:opacity-100">
+                  View and manage all entries in one place
+                </li>
+                <li className="transition duration-200 opacity-70 hover:opacity-100">
+                  Practice by language using quiz mode with spaced repetition
+                </li>
+                <li className="transition duration-200 opacity-70 hover:opacity-100">Import and export your data</li>
+              </ul>
+            </div>
           )}
         </div>
       </div>

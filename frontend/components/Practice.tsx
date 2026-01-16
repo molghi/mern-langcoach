@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useMyContext from "../hooks/useMyContext";
-import { getAddedLangs } from "../utils/dbFunctions";
+import { getAddedLangs } from "../utils/entryDbFunctions";
 import PracticeLangChoice from "./PracticeLangChoice";
 import LoadingSpinner from "./LoadingSpinner";
 import PracticeQuiz from "./PracticeQuiz";

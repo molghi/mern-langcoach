@@ -7,16 +7,22 @@ module.exports = async function getUserEntries(req, res) {
     let response = null;
     let entriesMatchingQuery = null;
 
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({ msg: "No user ID." });
+    }
+
     if (!req.query.filter || req.query.filter.includes("show_all")) {
       // get ALL user entries, newest first
-      [response, entriesMatchingQuery] = await fetchMain("all", req.query, response, entriesMatchingQuery);
+      [response, entriesMatchingQuery] = await fetchMain("all", req.query, response, entriesMatchingQuery, userId);
     } else {
       // get CERTAIN user entries (filtered), newest first
-      [response, entriesMatchingQuery] = await fetchMain("filtered", req.query, response, entriesMatchingQuery);
+      [response, entriesMatchingQuery] = await fetchMain("filtered", req.query, response, entriesMatchingQuery, userId);
     }
 
     // get quick summary: what langs are added, when categories are added
     const languagesAdded = await Entry.aggregate([
+      { $match: { userId } },
       {
         $group: {
           _id: "$language", // group by language
@@ -26,6 +32,7 @@ module.exports = async function getUserEntries(req, res) {
 
     // get what categories are added
     const categoriesAdded = await Entry.aggregate([
+      { $match: { userId } },
       {
         $group: {
           _id: "$category", // group by category
@@ -33,7 +40,7 @@ module.exports = async function getUserEntries(req, res) {
       },
     ]);
 
-    const allEntriesCount = await Entry.countDocuments(); // get total entries count
+    const allEntriesCount = await Entry.countDocuments({ userId }); // get total entries count
 
     if (!response) response = []; // safeguard
 
@@ -44,6 +51,7 @@ module.exports = async function getUserEntries(req, res) {
       categoriesAdded,
       allEntriesCount,
       entriesMatchingQueryCount: entriesMatchingQuery,
+      email: req.user.email,
     });
   } catch (error) {
     console.error(error);
@@ -53,13 +61,13 @@ module.exports = async function getUserEntries(req, res) {
 
 // ============================================================================
 
-async function fetchMain(flag, reqQuery, response, entriesMatchingQuery) {
+async function fetchMain(flag, reqQuery, response, entriesMatchingQuery, userId) {
   const entriesPerPage = 5; // hardcoded
   const pageRequested = Number(reqQuery.page);
 
   // ROUTE 1: fetch all entries
   if (flag === "all") {
-    response = await Entry.find()
+    response = await Entry.find({ userId })
       .sort({ createdAt: -1 })
       .skip((pageRequested - 1) * entriesPerPage) // skip this number of docs
       .limit(entriesPerPage); // limit output to this number of docs
@@ -73,22 +81,22 @@ async function fetchMain(flag, reqQuery, response, entriesMatchingQuery) {
 
     if (parameterKey === "language") {
       // fetch & filter by language
-      response = await Entry.find({ language: parameterValue })
+      response = await Entry.find({ userId, language: parameterValue })
         .sort({ createdAt: -1 })
         .skip((pageRequested - 1) * entriesPerPage)
         .limit(entriesPerPage);
 
-      entriesMatchingQuery = await Entry.countDocuments({ language: parameterValue });
+      entriesMatchingQuery = await Entry.countDocuments({ userId, language: parameterValue });
     }
 
     if (parameterKey === "category") {
       // fetch & filter by category
-      response = await Entry.find({ category: parameterValue })
+      response = await Entry.find({ userId, category: parameterValue })
         .sort({ createdAt: -1 })
         .skip((pageRequested - 1) * entriesPerPage)
         .limit(entriesPerPage);
 
-      entriesMatchingQuery = await Entry.countDocuments({ category: parameterValue });
+      entriesMatchingQuery = await Entry.countDocuments({ userId, category: parameterValue });
     }
 
     if (parameterKey === "period") {
@@ -99,6 +107,7 @@ async function fetchMain(flag, reqQuery, response, entriesMatchingQuery) {
       const periodEnd = new Date(year, month, 0);
       periodEnd.setHours(23, 59, 59, 999); // set hours to end of day
       response = await Entry.find({
+        userId,
         createdAt: {
           $gte: periodStart,
           $lte: periodEnd,
@@ -109,6 +118,7 @@ async function fetchMain(flag, reqQuery, response, entriesMatchingQuery) {
         .limit(entriesPerPage);
 
       entriesMatchingQuery = await Entry.countDocuments({
+        userId,
         createdAt: {
           $gte: periodStart,
           $lte: periodEnd,

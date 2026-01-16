@@ -30,6 +30,8 @@ function Header() {
     link?: string;
   }
 
+  // console.log(`Header`, userEmail);
+
   // ============================================================================
 
   const buttonsConfig: ButtonsInterface[] = [
@@ -91,22 +93,26 @@ function Header() {
 
   useEffect(() => {
     // change doc title
-    if (activeTab === 0) {
+    if (isLoggedIn && activeTab === 0) {
       document.title = `LangCoach — Word Form`;
       navigate("/form");
     }
-    if (activeTab === 1) {
+    if (isLoggedIn && activeTab === 1) {
       document.title = `LangCoach — Your Words`;
       setCurrentPage(1);
       navigate("/view-all");
     }
-    if (activeTab === 2) {
+    if (isLoggedIn && activeTab === 2) {
       document.title = `LangCoach — Practice`;
       setCurrentPractice([]); // if switching to Practice and there was some practice, it resets
       setCurrentPracticeCounter(0);
       navigate("/practice");
     }
-  }, [activeTab]);
+    if (!isLoggedIn) {
+      document.title = `LangCoach — Sign In`;
+      navigate("/auth");
+    }
+  }, [activeTab, isLoggedIn]);
 
   // ============================================================================
 

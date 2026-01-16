@@ -34,7 +34,7 @@ module.exports = async function signUp(req, res) {
 
     // sign jwt
     const token = jwt.sign(
-      { id: newUser._id }, // what to store in jwt
+      { id: newUser._id, email: foundUser.email }, // what to store in jwt
       process.env.JWT_SECRET, // additional encryption
       { expiresIn: "1d" } // set expiration time
     );

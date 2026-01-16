@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { createNewEntry, updateOneEntry } from "../utils/dbFunctions";
+import { createNewEntry, updateOneEntry } from "../utils/entryDbFunctions";
 import { languages } from "../context/MyContext";
 import type { EntryInterface } from "../context/MyContext";
 import Button from "./Button";
@@ -9,16 +9,18 @@ function AddEditForm() {
   const { itemInEdit, setItemInEdit, setFlashMsgContent } = useMyContext();
 
   const firstFieldRef = useRef<HTMLInputElement>(null);
-  const [word, setWord] = useState("");
-  const [language, setLanguage] = useState(languages[0].key);
-  const [translation, setTranslation] = useState("");
-  const [definition, setDefinition] = useState("");
-  const [category, setCategory] = useState("");
-  const [img, setImg] = useState("");
-  const [example, setExample] = useState("");
-  const [note, setNote] = useState("");
-  const [error, setError] = useState(""); // for validation errors
-  const [mode, setMode] = useState("add"); // either add or edit
+  const [word, setWord] = useState<string>("");
+  const [language, setLanguage] = useState<string>("");
+  const [translation, setTranslation] = useState<string>("");
+  const [definition, setDefinition] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [img, setImg] = useState<string>("");
+  const [example, setExample] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+  const [error, setError] = useState<string>(""); // for validation errors
+  const [mode, setMode] = useState<string>("add"); // either add or edit
+
+  const lsLastLangChoiceKey: string = `langcoach_add_lang_choice`;
 
   // get field value
   const fieldGetter = (key: string) => {
@@ -97,6 +99,8 @@ function AddEditForm() {
     { title: "Note", required: false, type: "input", key: "note" },
   ];
 
+  // ============================================================================
+
   useEffect(() => {
     if (itemInEdit !== null) {
       // if edit mode
@@ -115,7 +119,7 @@ function AddEditForm() {
       // if add mode
       setMode("add");
       setWord("");
-      setLanguage(languages[0].key);
+      setLanguage(localStorage.getItem("langcoach_add_lang_choice") || languages[0].key);
       setTranslation("");
       setDefinition("");
       setCategory("");
@@ -126,6 +130,17 @@ function AddEditForm() {
 
     firstFieldRef.current?.focus(); // focus first field
   }, [itemInEdit]);
+
+  useEffect(() => {
+    // on init load, recall last choice in lang select
+    const fromLS = localStorage.getItem(lsLastLangChoiceKey);
+    if (fromLS) setLanguage(fromLS);
+  }, []);
+
+  useEffect(() => {
+    // on changing lang, save to ls
+    if (language) localStorage.setItem(lsLastLangChoiceKey, language);
+  }, [language]);
 
   // ============================================================================
 
@@ -138,7 +153,7 @@ function AddEditForm() {
       await createNewEntry(newEntry, setError, setFlashMsgContent); // add to db
       // reset fields
       setWord("");
-      setLanguage(languages[0].key);
+      setLanguage(localStorage.getItem("langcoach_add_lang_choice") || languages[0].key);
       setTranslation("");
       setDefinition("");
       setCategory("");
@@ -200,7 +215,11 @@ function AddEditForm() {
                   className="min-h-[42px] bg-black/50 font-inherit px-2 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 focus:shadow-[0_0_15px_antiquewhite] text-[antiquewhite]"
                 >
                   {languages.map((el, i) => (
-                    <option value={el.key} key={i}>
+                    <option
+                      title={el.key.slice(0, 1).toUpperCase() + el.key.slice(1).toLowerCase()}
+                      value={el.key}
+                      key={i}
+                    >
                       {el.name}
                     </option>
                   ))}

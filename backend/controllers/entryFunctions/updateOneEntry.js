@@ -10,6 +10,11 @@ module.exports = async function updateOneEntry(req, res) {
     return res.status(400).json({ msg: "Fields - word, language, translation - cannot be empty." });
   }
 
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ msg: "No user ID." });
+  }
+
   // if (!req.body._id) {
   if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
     return res.status(400).json({ msg: "No entry ID." });

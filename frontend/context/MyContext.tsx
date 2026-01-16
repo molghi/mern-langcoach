@@ -59,6 +59,8 @@ interface ContextInterface {
   setQuizAnswers: React.Dispatch<React.SetStateAction<string[]>>;
   userEmail: string;
   setUserEmail: React.Dispatch<React.SetStateAction<string>>;
+  initFetchDone: Boolean;
+  setInitFetchDone: React.Dispatch<React.SetStateAction<Boolean>>;
 }
 
 // my context
@@ -66,49 +68,57 @@ export const Context = createContext<ContextInterface | null>(null);
 
 // available language options
 export const languages: { name: string; key: string }[] = [
+  { name: "🇺🇸 English", key: "english" },
   { name: "🇨🇱 Español", key: "spanish" },
-  { name: "🇪🇬 el-'arabiyya (العربية)", key: "arabic" },
-  { name: "🇩🇪 Deutsch", key: "german" },
   { name: "🇫🇷 Français", key: "french" },
   { name: "🇨🇳 zhōng wén (中文)", key: "chinese" },
-  { name: "🇮🇸 Íslenska", key: "icelandic" },
-  { name: "🇹🇷 Türkçe", key: "turkish" },
-  { name: "🇨🇿 Čeština", key: "czech" },
-  { name: "🇺🇸 English", key: "english" },
-  { name: "🇷🇺 Russkij (Русский)", key: "russian" },
+  { name: "🇩🇪 Deutsch", key: "german" },
+  { name: "🇪🇬 el-'arabiyya (العربية)", key: "arabic" },
   { name: "🇯🇵 nihongo (日本語)", key: "japanese" },
-  // { name: "🇧🇷 Português", key: "portuguese" },
-  // { name: "🇮🇹 Italiano", key: "italian" },
+  { name: "🇧🇷 Português", key: "portuguese" },
+  { name: "🇷🇺 Russkij (Русский)", key: "russian" },
+  { name: "🇮🇹 Italiano", key: "italian" },
+  { name: "🇰🇷 hangugeo (한국어)", key: "korean" },
+  { name: "🇮🇳 hindī (हिन्दी)", key: "hindi" },
+  { name: "🇹🇷 Türkçe", key: "turkish" },
+  { name: "🇮🇷 fārsi (فارسی)", key: "persian" },
+  { name: "🇨🇿 Čeština", key: "czech" },
+  { name: "🇮🇸 Íslenska", key: "icelandic" },
 ];
 
 // colors associated with languages
 export const languageColors: Record<string, string> = {
-  spanish: "gold",
-  arabic: "green",
-  german: "coral",
-  french: "dodgerblue",
-  chinese: "salmon",
   icelandic: "cyan",
-  turkish: "red",
   czech: "#C060B9",
-  english: "#B22C4F",
-  russian: "MistyRose",
-  japanese: "#F0FFA5",
+  english: "#B22C4F", // deep red (US/UK flag tones)
+  spanish: "gold",
+  french: "dodgerblue", // blue (flag)
+  chinese: "salmon", // red family (flag)
+  german: "coral", // warm dark tone
+  arabic: "green", // requested (common cultural color)
+  japanese: "#F0FFA5", // soft off-white / parchment
+  portuguese: "#2E8B57", // sea green (Portugal/Brazil flags)
+  russian: "MistyRose", // pale red
+  italian: "#3CB371", // green (flag)
+  korean: "#87CEEB", // sky blue (taegeuk balance)
+  hindi: "#FF9933", // saffron (Indian flag)
+  turkish: "red", // flag
+  persian: "#1E90FF", // deep blue (traditional Persian art)
 };
 
 // available choice for an animated bg
 export const availableBGs = {
-  "Snowing in the dusk": "snowing-in-the-dusk.gif",
+  "Snowing at dusk": "snowing-in-the-dusk.gif",
   // "snow-in-the-dark.gif": "snow-in-the-dark.gif",
   "Heavy snow": "heavy-snow.gif",
   "Snowing in the forest 2": "snowing-in-the-forest-2.gif",
   "Snowing in the forest": "snowing-in-the-forest.gif",
   "Snowy forest": "snowy-forest.gif",
-  "Snow lamppost": "snow-lamppost.gif",
-  "Snowing top": "snowing-top.gif",
+  "Lamppost in snow": "snow-lamppost.gif",
+  "Snow from above": "snowing-top.gif",
   "Snowy overcast": "snowy-overcast.gif",
-  "Snow trees": "snow-trees.gif",
-  "Snow black": "snow-black.gif",
+  "Snowy trees": "snow-trees.gif",
+  "Snow on black": "snow-black.gif",
   "Snowy day": "snowy-day.gif",
   // "Snowy day 2":"snowy-day-2.gif",
   // "Snowy day 3":"snowy-day-3.gif",
@@ -122,7 +132,7 @@ export const entriesPerPage: number = 5;
 // wrapper
 export default function ContextProvider({ children }: ContextProviderProps) {
   /* fields here (2) */
-  const [activeTab, setActiveTab] = useState<number>(0); // 0=Add New, 1=View All, 2=Practice
+  const [activeTab, setActiveTab] = useState<number>(1); // 0=Add New, 1=View All, 2=Practice
   const [entries, setEntries] = useState<EntryInterface[]>([]); // init w/ type signature; for entries fetched from db
   const [isLoggedIn, setIsLoggedIn] = useState<Boolean>(false);
   const [itemInEdit, setItemInEdit] = useState<EntryInterface | null>(null);
@@ -140,6 +150,7 @@ export default function ContextProvider({ children }: ContextProviderProps) {
   const [currentPracticeCounter, setCurrentPracticeCounter] = useState<number>(0);
   const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
   const [userEmail, setUserEmail] = useState<string>("");
+  const [initFetchDone, setInitFetchDone] = useState<Boolean>(false);
 
   return (
     <Context.Provider
@@ -180,6 +191,8 @@ export default function ContextProvider({ children }: ContextProviderProps) {
         setQuizAnswers,
         userEmail,
         setUserEmail,
+        initFetchDone,
+        setInitFetchDone,
       }}
     >
       {children}

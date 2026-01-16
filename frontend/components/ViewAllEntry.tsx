@@ -1,6 +1,6 @@
 import { languages, languageColors } from "../context/MyContext";
 import useMyContext from "../hooks/useMyContext";
-import { deleteOneEntry, getUserEntries } from "../utils/dbFunctions";
+import { deleteOneEntry, getUserEntries } from "../utils/entryDbFunctions";
 import type { EntryInterface } from "../context/MyContext"; // import as type
 import Button from "./Button";
 
@@ -23,6 +23,7 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
     setAllEntriesCount,
     setEntriesMatchingQueryCount,
     currentPractice,
+    setUserEmail,
   } = useMyContext();
 
   // format date string nicely
@@ -64,7 +65,8 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
           setLanguagesAdded,
           setCategoriesAdded,
           setAllEntriesCount,
-          setEntriesMatchingQueryCount
+          setEntriesMatchingQueryCount,
+          setUserEmail
         );
     }
   };

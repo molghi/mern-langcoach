@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Entry = require("../../models/EntryModel");
 
 module.exports = async function getPracticeRounds(req, res) {
@@ -8,6 +9,11 @@ module.exports = async function getPracticeRounds(req, res) {
     return res.status(400).json({ msg: "Practice language not set." });
   }
 
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ msg: "No user ID." });
+  }
+
   const now = new Date();
 
   try {
@@ -15,6 +21,7 @@ module.exports = async function getPracticeRounds(req, res) {
     const response = await Entry.aggregate([
       {
         $match: {
+          userId: new mongoose.Types.ObjectId(userId),
           language: practiceLanguage, // match language
           // nextRevisionDate must be either right now or in the past or undefined:
           $or: [{ nextRevisionDate: { $lte: now } }, { nextRevisionDate: { $exists: false } }, { nextRevisionDate: 0 }],

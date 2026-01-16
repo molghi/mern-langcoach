@@ -1,7 +1,7 @@
 import Button from "./Button";
 import { languages } from "../context/MyContext";
 import useMyContext from "../hooks/useMyContext";
-import { fetchPracticeRounds } from "../utils/dbFunctions";
+import { fetchPracticeRounds } from "../utils/entryDbFunctions";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -36,7 +36,7 @@ function PracticeLangChoice({ addedLangs }: Props) {
         {/* Title */}
         <h2 className="text-2xl font-semibold mb-14 text-center">
           <span className="bg-black/50 rounded-[5px] px-4 py-1.5 text-green-500">
-            {addedLangs && addedLangs.length > 1 ? "Choose Language" : "You haven't added any words"}
+            {addedLangs && addedLangs.length > 0 ? "Choose Language" : "You haven't added any words yet."}
           </span>
         </h2>
 

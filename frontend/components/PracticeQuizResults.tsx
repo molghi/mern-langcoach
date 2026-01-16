@@ -2,7 +2,7 @@ import useMyContext from "../hooks/useMyContext";
 import ViewAllEntry from "./ViewAllEntry";
 import Button from "./Button";
 import { useState } from "react";
-import { saveQuizResults } from "../utils/dbFunctions";
+import { saveQuizResults } from "../utils/entryDbFunctions";
 
 function PracticeQuizResults() {
   const {

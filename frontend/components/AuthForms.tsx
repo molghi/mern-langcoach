@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import useMyContext from "../hooks/useMyContext";
 import SignUpForm from "./SignUpForm";
 import LogInForm from "./LogInForm";
+import { useNavigate } from "react-router-dom";
 
 function AuthForms() {
+  const { isLoggedIn } = useMyContext();
+
   const [activeForm, setActiveForm] = useState<0 | 1>(0); // 0 - signup, 1 - login
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/view-all");
+    }
+  }, []);
+
+  // ============================================================================
 
   return (
     <div className="max-w-md font-mono mx-auto mt-12 p-6 bg-black/50 rounded-lg shadow-md text-[antiquewhite]">

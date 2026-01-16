@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { languages } from "../context/MyContext";
-import { getUserEntries } from "../utils/dbFunctions";
+import { getUserEntries } from "../utils/entryDbFunctions";
 import useMyContext from "../hooks/useMyContext";
 
 interface Props {
@@ -22,6 +22,7 @@ function ViewAllFilter({ filterOption, setFilterOption }: Props) {
     setIsLoading,
     setEntriesMatchingQueryCount,
     currentPage,
+    setUserEmail,
   } = useMyContext(); // pull from context
 
   useEffect(() => {
@@ -59,6 +60,7 @@ function ViewAllFilter({ filterOption, setFilterOption }: Props) {
           setCategoriesAdded,
           setAllEntriesCount,
           setEntriesMatchingQueryCount,
+          setUserEmail,
           parameter,
           currentPage
           // filterOption === "show_all" ? currentPage : 1

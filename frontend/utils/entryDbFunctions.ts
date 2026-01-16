@@ -30,6 +30,7 @@ async function getUserEntries(
   setCategoriesAdded: React.Dispatch<React.SetStateAction<string[]>>,
   setAllEntriesCount: React.Dispatch<React.SetStateAction<number>>,
   setEntriesMatchingQueryCount: React.Dispatch<React.SetStateAction<number>>,
+  setUserEmail: React.Dispatch<React.SetStateAction<string>>,
   parameter?: string,
   page: number = 1
 ) {
@@ -45,6 +46,7 @@ async function getUserEntries(
       setEntries(response.data.entries); // not all words but only currently paginated/portioned
       setAllEntriesCount(response.data.allEntriesCount); // TOTAL words count that user has
       setEntriesMatchingQueryCount(response.data.entriesMatchingQueryCount); // count for: words matching current filter query
+      setUserEmail(response.data.email);
 
       // set quick summary for filter in View All
       setLanguagesAdded(response.data.languagesAdded.map((x: { _id: string }) => x._id).filter((x: any) => x.trim())); // get what langs are added
@@ -174,6 +176,27 @@ async function saveQuizResults(currentPractice: EntryInterface[], ratings: any[]
 }
 
 // ============================================================================
+interface ReturnedExport {
+  msg: string;
+  entries: any[];
+}
+
+// returns either arr of data - or boolean: meaning it failed
+async function exportEntries(): Promise<ReturnedExport | boolean> {
+  try {
+    const response = await axios.get("http://localhost:8000/export");
+
+    if (response.status === 200) {
+      return response.data;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+// ============================================================================
 
 export {
   createNewEntry,
@@ -183,4 +206,5 @@ export {
   getAddedLangs,
   fetchPracticeRounds,
   saveQuizResults,
+  exportEntries,
 };

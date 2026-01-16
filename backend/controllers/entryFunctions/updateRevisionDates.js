@@ -7,6 +7,11 @@ module.exports = async function updateRevisionDates(req, res) {
     return res.status(400).json({ msg: "No data received." });
   }
 
+  const userId = req.user.id;
+  if (!userId) {
+    return res.status(400).json({ msg: "No user ID." });
+  }
+
   const idsArray = Object.keys(dataObj);
 
   try {

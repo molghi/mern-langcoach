@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 const entrySchema = mongoose.Schema(
   {
-    // userId: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
+    userId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: true,
+    },
     word: {
       type: String,
       required: true, // imperative

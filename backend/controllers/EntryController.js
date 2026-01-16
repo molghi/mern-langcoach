@@ -12,6 +12,8 @@ const getPracticeRounds = require("./entryFunctions/getPracticeRounds");
 
 const updateRevisionDates = require("./entryFunctions/updateRevisionDates");
 
+const exportEntries = require("./entryFunctions/exportEntries");
+
 module.exports = {
   createNewEntry,
   getUserEntries,
@@ -20,4 +22,5 @@ module.exports = {
   getAddedLangs,
   getPracticeRounds,
   updateRevisionDates,
+  exportEntries,
 };
