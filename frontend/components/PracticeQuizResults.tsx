@@ -37,27 +37,42 @@ function PracticeQuizResults() {
   return (
     <div className="flex flex-col gap-10 w-full text-[antiquewhite] text-center">
       {/* Title */}
-      <h1 className="text-2xl font-bold">Assess your knowledge</h1>
+      <h1 className="flex flex-col gap-2 max-w-2xl mx-auto">
+        <span className="text-2xl font-bold">Assess your knowledge</span>{" "}
+        <span className="text-sm italic transition duration-200 opacity-60 hover:opacity-100">
+          This is required for the spaced repetition system, which shows you the most relevant entries to practice and
+          helps you progress efficiently.
+        </span>
+      </h1>
 
       {/* Quiz rounds & user's answers */}
       <div className="max-w-4xl w-full mx-auto flex flex-col gap-8 mb-8">
         {currentPractice.map((el, i) => (
-          <ViewAllEntry
-            key={i}
-            data={el}
-            mode="quiz_round"
-            answer={quizAnswers[i]}
-            setRatings={setRatings}
-            ratings={ratings}
-          />
+          <div key={i} className="relative">
+            <div
+              className="absolute top-0 sm:top-auto sm:bottom-[0] lg:top-1/2 lg:bottom-auto right-[15px] lg:right-auto lg:left-[-70px] lg:-translate-y-1/2 text-[60px] font-bold text-[gray] opacity-50"
+              title={`Round ${i + 1}`}
+            >
+              {i + 1}
+            </div>
+            <ViewAllEntry
+              data={el}
+              mode="quiz_round"
+              answer={quizAnswers[i]}
+              setRatings={setRatings}
+              ratings={ratings}
+            />
+          </div>
         ))}
       </div>
 
       {/* Action button */}
-      <div className="text-right mr-10">
+      <div className="text-right flex gap-6 items-center justify-end flex-wrap sm:flex-nowrap">
         {/* Info msg */}
         {ratings.length < currentPractice.length && (
-          <span className="bg-black/50 rounded-[5px] px-4 py-1.5 mr-6">Please rate every round to proceed</span>
+          <span className="bg-black/50 rounded-[5px] px-4 py-1.5 text-sm sm:text-md">
+            Please rate each round to continue
+          </span>
         )}
 
         <Button

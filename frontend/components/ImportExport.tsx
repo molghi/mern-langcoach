@@ -1,16 +1,89 @@
 import Button from "./Button";
-import { exportEntries } from "../utils/entryDbFunctions";
+import { exportEntries, importEntries, getUserEntries } from "../utils/entryDbFunctions";
 import useMyContext from "../hooks/useMyContext";
+import { useRef, useEffect } from "react";
 
 function ImportExport() {
-  const { isLoggedIn, setFlashMsgContent } = useMyContext();
+  const {
+    isLoggedIn,
+    setFlashMsgContent,
+    activeTab,
+    setIsLoading,
+    setEntries,
+    setLanguagesAdded,
+    setCategoriesAdded,
+    setAllEntriesCount,
+    setEntriesMatchingQueryCount,
+    setUserEmail,
+  } = useMyContext();
 
-  const importFile = () => {
-    console.log("import");
+  const fileImporterEl = useRef<HTMLInputElement | null>(null);
+
+  // initiate import: open dialog window
+  const initImport = () => fileImporterEl.current?.click();
+
+  // process input
+  const reactToInput = async (e: Event) => {
+    // receive file
+    const input = e.target as HTMLInputElement; // html input element
+    const file = input.files?.[0]; // take 1st file
+    // check file existence
+    if (!file) return;
+    // check file type
+    if (file && file.type !== "application/json") {
+      return setFlashMsgContent(["error", "Only JSON files are allowed."]);
+    }
+    // check json file size
+    if (file && file.type == "application/json" && file.size >= 5242880) {
+      return setFlashMsgContent(["error", "File too large. Max 5 MB."]); // 5242880 = 5 MB
+    }
+    // check proper formatting: get file contents
+    const rawContents = await file.text(); // string of raw contents
+    const jsonized = JSON.parse(rawContents); // made json
+    const validationResult = checkProperFormatting(jsonized); // check that that json has all the fields I allow
+    if (validationResult === false) {
+      return setFlashMsgContent(["error", "File formatted incorrectly."]);
+    }
+    // push to db
+    if (Array.isArray(validationResult)) {
+      setIsLoading(true);
+      const importSuccessful = await importEntries(validationResult);
+      if (importSuccessful) {
+        setFlashMsgContent(["success", "Import successful!"]);
+        if (activeTab === 1) {
+          // re-fetch words if on View All tab
+          await getUserEntries(
+            setEntries,
+            setLanguagesAdded,
+            setCategoriesAdded,
+            setAllEntriesCount,
+            setEntriesMatchingQueryCount,
+            setUserEmail,
+            "category_show_all", // filter parameter
+            1 // page to show
+          );
+        }
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        setFlashMsgContent(["error", "Import failed."]);
+      }
+    }
   };
 
+  // ============================================================================
+
+  useEffect(() => {
+    // listen to change event on input file
+    fileImporterEl.current?.addEventListener("change", (e: Event) => reactToInput(e as Event));
+
+    return () => fileImporterEl.current?.removeEventListener("change", (e: Event) => reactToInput(e));
+  }, [fileImporterEl.current]);
+
+  // ============================================================================
+
   const exportFile = async () => {
-    const exportData = await exportEntries(); // bitchign about exportData
+    const exportData = await exportEntries();
 
     if (!exportData || typeof exportData === "boolean") {
       setFlashMsgContent(["error", "Exporting failed."]);
@@ -43,19 +116,22 @@ function ImportExport() {
 
   return (
     isLoggedIn && (
-      <div className="flex gap-2 font-mono text-[antiquewhite] absolute sm:fixed bottom-[90px] sm:bottom-[70px] right-[10px] sm:right-[20px]">
-        {/* Iterate & gen btns */}
-        {btnsConfig.map((el, i) => (
-          <Button
-            key={i}
-            onClick={el.identifier === "import" ? importFile : exportFile}
-            title={el.title}
-            className={el.classes}
-          >
-            {el.name}
-          </Button>
-        ))}
-      </div>
+      <>
+        <div className="flex gap-2 font-mono text-[antiquewhite] absolute sm:fixed bottom-[90px] sm:bottom-[70px] right-[10px] sm:right-[20px]">
+          {/* Iterate & gen btns */}
+          {btnsConfig.map((el, i) => (
+            <Button
+              key={i}
+              onClick={el.identifier === "import" ? initImport : exportFile}
+              title={el.title}
+              className={el.classes}
+            >
+              {el.name}
+            </Button>
+          ))}
+        </div>
+        <input type="file" className="hidden" ref={fileImporterEl} />
+      </>
     )
   );
 }
@@ -88,6 +164,37 @@ function downloadEntries(entries: any[]) {
   // Clean up
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// ============================================================================
+
+// helper fn: returns either boolean false or clean arr of entry objs
+function checkProperFormatting(arrOfObjs: any[]): any[] | boolean {
+  if (arrOfObjs.length === 0) return false;
+
+  // check that each arr has these properties: word, language, translation -- paramount!
+  // these are secondary, allowed -- definition, category, img, example, note
+  // everything else -- to filter out
+  const newArr = arrOfObjs.filter((entryObj) => {
+    const crucialFieldsPresent: boolean =
+      Object.hasOwn(entryObj, "word") && Object.hasOwn(entryObj, "language") && Object.hasOwn(entryObj, "translation");
+
+    if (!crucialFieldsPresent) {
+      return null;
+    }
+
+    // filter out disallowed fields
+    const allowedKeys = ["word", "language", "translation", "definition", "category", "img", "example", "note"];
+    const entryKeys = Object.keys(entryObj);
+
+    entryKeys.forEach((key) => {
+      if (!allowedKeys.includes(key)) delete entryObj[key];
+    });
+    return entryObj;
+  });
+
+  if (newArr.length === 0) return false;
+  else return newArr;
 }
 
 export default ImportExport;

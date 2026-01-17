@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Entry = require("../../models/EntryModel");
 
 // ============================================================================
@@ -22,7 +24,8 @@ module.exports = async function getUserEntries(req, res) {
 
     // get quick summary: what langs are added, when categories are added
     const languagesAdded = await Entry.aggregate([
-      { $match: { userId } },
+      // { $match: { userId } },
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: "$language", // group by language
@@ -32,7 +35,8 @@ module.exports = async function getUserEntries(req, res) {
 
     // get what categories are added
     const categoriesAdded = await Entry.aggregate([
-      { $match: { userId } },
+      // { $match: { userId } },
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       {
         $group: {
           _id: "$category", // group by category
@@ -62,7 +66,7 @@ module.exports = async function getUserEntries(req, res) {
 // ============================================================================
 
 async function fetchMain(flag, reqQuery, response, entriesMatchingQuery, userId) {
-  const entriesPerPage = 5; // hardcoded
+  const entriesPerPage = 10; // hardcoded
   const pageRequested = Number(reqQuery.page);
 
   // ROUTE 1: fetch all entries

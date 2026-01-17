@@ -14,6 +14,8 @@ const updateRevisionDates = require("./entryFunctions/updateRevisionDates");
 
 const exportEntries = require("./entryFunctions/exportEntries");
 
+const importEntries = require("./entryFunctions/importEntries");
+
 module.exports = {
   createNewEntry,
   getUserEntries,
@@ -23,4 +25,5 @@ module.exports = {
   getPracticeRounds,
   updateRevisionDates,
   exportEntries,
+  importEntries,
 };

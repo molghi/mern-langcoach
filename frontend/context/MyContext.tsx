@@ -11,11 +11,11 @@ export interface EntryInterface {
   word: string;
   language: string;
   translation: string;
-  definition: string;
-  category: string;
-  img: string;
-  example: string;
-  note: string;
+  definition?: string;
+  category?: string;
+  img?: string;
+  example?: string;
+  note?: string;
   _id?: number | string;
   createdAt?: string;
   updatedAt?: string;
@@ -125,7 +125,7 @@ export const availableBGs = {
 };
 
 export const localStorageBgKey: string = "langcoach_bg";
-export const entriesPerPage: number = 5;
+export const entriesPerPage: number = 10;
 
 // =====================================================================================================
 

@@ -94,7 +94,7 @@ function AddEditForm() {
     { title: "Translation", required: true, type: "input", key: "translation" },
     { title: "Definition / Tip", required: false, type: "input", key: "definition" },
     { title: "Category / Tag", required: false, type: "input", key: "category" },
-    { title: "Web Img Path", required: false, type: "input", key: "img" },
+    { title: "Web Image Path (use small images)", required: false, type: "input", key: "img" },
     { title: "Example Usage", required: false, type: "input", key: "example" },
     { title: "Note", required: false, type: "input", key: "note" },
   ];
@@ -108,11 +108,11 @@ function AddEditForm() {
       setWord(itemInEdit.word);
       setLanguage(itemInEdit.language);
       setTranslation(itemInEdit.translation);
-      setDefinition(itemInEdit.definition);
-      setCategory(itemInEdit.category);
-      setImg(itemInEdit.img);
-      setExample(itemInEdit.example);
-      setNote(itemInEdit.note);
+      setDefinition(itemInEdit.definition || "");
+      setCategory(itemInEdit.category || "");
+      setImg(itemInEdit.img || "");
+      setExample(itemInEdit.example || "");
+      setNote(itemInEdit.note || "");
     }
 
     if (itemInEdit === null) {

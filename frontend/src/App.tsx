@@ -133,7 +133,7 @@ function App() {
     // attempt fetching user entries and return if authorized/logged in or not
     const initFetch = async () => {
       const pageToShow = 1;
-      const filterParameter = "show_all";
+      const filterParameter = "category_show_all";
       setIsLoading(true);
       const authorized: boolean = await getUserEntries(
         setEntries,

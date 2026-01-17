@@ -186,7 +186,7 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
         {/* Web Img */}
         {data.img && (
           <div className="flex gap-4">
-            <span className="font-bold opacity-30">Web Img:</span>{" "}
+            <span className="font-bold opacity-30">Web Image:</span>{" "}
             <img alt="Web Image" src={data.img} className="max-w-[200px] object-contain" />
           </div>
         )}

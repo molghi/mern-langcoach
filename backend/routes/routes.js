@@ -10,8 +10,9 @@ const {
   getPracticeRounds,
   updateRevisionDates,
   exportEntries,
+  importEntries,
 } = require("../controllers/EntryController");
-const { signUp, logIn, logOut, checkAuth } = require("../controllers/UserController");
+const { signUp, logIn, logOut } = require("../controllers/UserController");
 const auth = require("../middleware/auth");
 
 // ============================================================================
@@ -43,6 +44,9 @@ router.patch("/entries_quiz", auth, updateRevisionDates);
 
 // do export
 router.get("/export", auth, exportEntries);
+
+// do import
+router.post("/import", auth, importEntries);
 
 //
 

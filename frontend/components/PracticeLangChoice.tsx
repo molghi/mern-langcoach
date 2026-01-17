@@ -32,7 +32,7 @@ function PracticeLangChoice({ addedLangs }: Props) {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6 text-[antiquewhite]">
+      <div className="max-w-4xl mx-auto p-2 sm:p-6 text-[antiquewhite]">
         {/* Title */}
         <h2 className="text-2xl font-semibold mb-14 text-center">
           <span className="bg-black/50 rounded-[5px] px-4 py-1.5 text-green-500">
@@ -60,17 +60,19 @@ function PracticeLangChoice({ addedLangs }: Props) {
               ))}
             </div>
 
-            <div className="text-right">
+            <div className="text-right flex gap-6 items-center justify-end flex-wrap sm:flex-nowrap">
               {/* Short conditional info msg */}
               {chosenPracticeLanguage === "" && (
-                <span className="bg-black/50 rounded-[5px] px-4 py-1.5 mr-6">Please select a language to proceed</span>
+                <span className="bg-black/50 rounded-[5px] px-4 py-1.5 text-sm sm:text-md">
+                  Please select a language to proceed
+                </span>
               )}
 
               {/* Btn */}
               <Button
                 onClick={fetchPractice}
                 className={`hover:text-black hover:bg-[antiquewhite] active:opacity-50 ${
-                  chosenPracticeLanguage === "" ? "pointer-events-none opacity-50 bg-[#555] italic" : ""
+                  chosenPracticeLanguage === "" ? "pointer-events-none opacity-50 bg-[#555] italic" : "bg-black/50"
                 }`}
                 style={{ fontSize: "20px", padding: "15px 20px" }}
               >

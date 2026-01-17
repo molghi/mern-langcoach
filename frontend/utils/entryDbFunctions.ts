@@ -176,6 +176,7 @@ async function saveQuizResults(currentPractice: EntryInterface[], ratings: any[]
 }
 
 // ============================================================================
+
 interface ReturnedExport {
   msg: string;
   entries: any[];
@@ -198,6 +199,21 @@ async function exportEntries(): Promise<ReturnedExport | boolean> {
 
 // ============================================================================
 
+async function importEntries(entries: EntryInterface[]): Promise<boolean> {
+  try {
+    const response = await axios.post("http://localhost:8000/import", { entries });
+    if (response.status === 200) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+// ============================================================================
+
 export {
   createNewEntry,
   getUserEntries,
@@ -207,4 +223,5 @@ export {
   fetchPracticeRounds,
   saveQuizResults,
   exportEntries,
+  importEntries,
 };

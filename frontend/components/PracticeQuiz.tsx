@@ -91,7 +91,7 @@ function PracticeQuiz() {
               {/* Img */}
               {currentRoundData.img && (
                 <div>
-                  <span className="font-bold opacity-50 mr-4">Web Img:</span>
+                  <span className="font-bold opacity-50 mr-4">Web Image:</span>
                   <img
                     src={currentRoundData.img}
                     alt="Word Img Demonstration"

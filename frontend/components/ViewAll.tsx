@@ -1,6 +1,6 @@
 import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
-import { getUserEntries } from "../utils/entryDbFunctions";
+import { getUserEntries, getAddedLangs } from "../utils/entryDbFunctions";
 import { useEffect, useState } from "react";
 import { entriesPerPage } from "../context/MyContext";
 import LoadingSpinner from "./LoadingSpinner";
@@ -22,7 +22,7 @@ function ViewAll() {
     setUserEmail,
   } = useMyContext(); // pull from context
 
-  const [filterOption, setFilterOption] = useState<string>("show_all"); // selected option in filter select
+  const [filterOption, setFilterOption] = useState<string>("category_show_all"); // selected option in filter select
 
   useEffect(() => {
     // fetch entries upon init mount and curPage change
@@ -38,6 +38,7 @@ function ViewAll() {
         filterOption,
         currentPage
       );
+      // await getAddedLangs(setLanguagesAdded);
       setIsLoading(false);
     };
     fetch();
@@ -59,7 +60,7 @@ function ViewAll() {
         {/* Flexbox with two nav elements */}
         <div className="flex justify-between sm:items-center gap-4 mb-10 flex-col [@media(min-width:650px)]:flex-row">
           {/* How many entries */}
-          <div className="text-sm">
+          <div className="text-sm" title="Entries: Shown / All">
             <span className="font-bold opacity-50">Entries:</span> {`${countShownOnes} / ${countAll}`}
           </div>
 
