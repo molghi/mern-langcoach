@@ -66,24 +66,51 @@ interface ContextInterface {
 // my context
 export const Context = createContext<ContextInterface | null>(null);
 
+const flagVariations: { [key: string]: string[] } = {
+  english: ["🇺🇸", "🇬🇧", "🇦🇺", "🍔", "🗽"],
+  spanish: ["🇨🇱", "🇦🇷", "🇲🇽", "🇪🇸", "💃"],
+  french: ["🇫🇷", "🇧🇪", "🥐", "🥖", "🧀"],
+  chinese: ["🇨🇳", "🇹🇼", "🍵", "🐉"],
+  german: ["🇩🇪", "🇦🇹", "🇨🇭", "🍺", "🥨"],
+  arabic: ["🇪🇬", "🇵🇸", "🇸🇦", "🇲🇦"],
+  japanese: ["🇯🇵", "🎎", "🥷", "🍱"],
+  portuguese: ["🇧🇷", "🇵🇹"],
+  russian: ["🇷🇺", "🪆"],
+  italian: ["🇮🇹", "🍕", "🤌"],
+  korean: ["🇰🇷", "🇰🇵"],
+  hindi: ["🇮🇳", "🪷"],
+  icelandic: ["🇮🇸", "ᛗ"],
+  hebrew: ["🇮🇱", "🕎"],
+  latin: ["🇻🇦", "🏛️"],
+  greek: ["🇬🇷", "🏺", "🫒"],
+};
+
+const getRandomFlag = (arr: string[]): string => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
 // available language options
 export const languages: { name: string; key: string }[] = [
-  { name: "🇺🇸 English", key: "english" },
-  { name: "🇨🇱 Español", key: "spanish" },
-  { name: "🇫🇷 Français", key: "french" },
-  { name: "🇨🇳 zhōng wén (中文)", key: "chinese" },
-  { name: "🇩🇪 Deutsch", key: "german" },
-  { name: "🇪🇬 el-'arabiyya (العربية)", key: "arabic" },
-  { name: "🇯🇵 nihongo (日本語)", key: "japanese" },
-  { name: "🇧🇷 Português", key: "portuguese" },
-  { name: "🇷🇺 Russkij (Русский)", key: "russian" },
-  { name: "🇮🇹 Italiano", key: "italian" },
-  { name: "🇰🇷 hangugeo (한국어)", key: "korean" },
-  { name: "🇮🇳 hindī (हिन्दी)", key: "hindi" },
+  { name: `${getRandomFlag(flagVariations.english)} English`, key: "english" },
+  { name: `${getRandomFlag(flagVariations.spanish)} Español`, key: "spanish" },
+  { name: `${getRandomFlag(flagVariations.french)} Français`, key: "french" },
+  { name: `${getRandomFlag(flagVariations.chinese)} zhōng wén (中文)`, key: "chinese" },
+  { name: `${getRandomFlag(flagVariations.german)} Deutsch`, key: "german" },
+  { name: `${getRandomFlag(flagVariations.arabic)} el-'arabiyya (العربية)`, key: "arabic" },
+  { name: `${getRandomFlag(flagVariations.japanese)} nihongo (日本語)`, key: "japanese" },
+  { name: `${getRandomFlag(flagVariations.portuguese)} Português`, key: "portuguese" },
+  { name: `${getRandomFlag(flagVariations.russian)} Russkij (Русский)`, key: "russian" },
+  { name: `${getRandomFlag(flagVariations.italian)} Italiano`, key: "italian" },
+  { name: `${getRandomFlag(flagVariations.korean)} hangugeo (한국어)`, key: "korean" },
+  { name: `${getRandomFlag(flagVariations.hindi)} hindī (हिन्दी)`, key: "hindi" },
   { name: "🇹🇷 Türkçe", key: "turkish" },
   { name: "🇮🇷 fārsi (فارسی)", key: "persian" },
   { name: "🇨🇿 Čeština", key: "czech" },
-  { name: "🇮🇸 Íslenska", key: "icelandic" },
+  { name: "🇳🇴 Norsk", key: "norwegian" },
+  { name: `${getRandomFlag(flagVariations.icelandic)} Íslenska`, key: "icelandic" },
+  { name: `${getRandomFlag(flagVariations.hebrew)} Ivrit (עברית)`, key: "hebrew" },
+  { name: `${getRandomFlag(flagVariations.latin)} Latina`, key: "latin" },
+  { name: `${getRandomFlag(flagVariations.greek)} Elliniká (Ελληνικά)`, key: "greek" },
 ];
 
 // colors associated with languages
@@ -104,6 +131,7 @@ export const languageColors: Record<string, string> = {
   hindi: "#FF9933", // saffron (Indian flag)
   turkish: "red", // flag
   persian: "#1E90FF", // deep blue (traditional Persian art)
+  hebrew: "blue",
 };
 
 // available choice for an animated bg
@@ -111,15 +139,16 @@ export const availableBGs = {
   "Snowing at dusk": "snowing-in-the-dusk.gif",
   // "snow-in-the-dark.gif": "snow-in-the-dark.gif",
   "Heavy snow": "heavy-snow.gif",
-  "Snowing in the forest 2": "snowing-in-the-forest-2.gif",
+  // "Snowing in the forest 2": "snowing-in-the-forest-2.gif",
   "Snowing in the forest": "snowing-in-the-forest.gif",
   "Snowy forest": "snowy-forest.gif",
   "Lamppost in snow": "snow-lamppost.gif",
-  "Snow from above": "snowing-top.gif",
+  // "Snow from above": "snowing-top.gif",
   "Snowy overcast": "snowy-overcast.gif",
   "Snowy trees": "snow-trees.gif",
   "Snow on black": "snow-black.gif",
   "Snowy day": "snowy-day.gif",
+  "Cozy fireplace": "fireplace.gif",
   // "Snowy day 2":"snowy-day-2.gif",
   // "Snowy day 3":"snowy-day-3.gif",
 };

@@ -45,17 +45,30 @@ function PracticeQuiz() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 w-full text-[antiquewhite] text-center">
+      <div className="flex flex-col gap-10 w-full text-[antiquewhite] text-center max-w-xl mx-auto">
         {/* Title: what round it is */}
-        <h1 className="text-2xl font-bold">
-          Round {currentPracticeCounter + 1} / {currentPractice.length}
-        </h1>
+        <div className="flex flex-col gap-1 transition duration-200 opacity-60 hover:opacity-100">
+          <h1 className="text-lg font-bold text-left">
+            Round {currentPracticeCounter + 1} / {currentPractice.length}
+          </h1>
+          {/* Progress Bar */}
+          <div className="h-[5px] bg-[#444] rounded">
+            <div
+              style={{ width: Math.floor((currentPracticeCounter + 1 / currentPractice.length) * 100) + "%" }}
+              className="h-full max-w-full rounded bg-[antiquewhite]"
+            ></div>
+          </div>
+        </div>
 
         {/* Smaller info title */}
-        <h2 className="text-xl font-semibold italic">Recall the translation of the current word / phrase:</h2>
+        <h2 className="text-xl font-semibold italic">
+          <span className="bg-black/50 rounded-[5px] px-4 py-1.5">Recall the translation of this word / phrase:</span>
+        </h2>
 
         {/* Word of the round */}
-        <h3 className="text-4xl font-bold">{currentRoundData.word}</h3>
+        <h3 className="text-4xl font-bold text-[gold]">
+          <span className="bg-black/60 rounded-[5px] px-4 py-1.5 leading-normal">{currentRoundData.word}</span>
+        </h3>
 
         {/* Other data box */}
         {currentRoundData.definition ||
@@ -117,7 +130,7 @@ function PracticeQuiz() {
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             type="text"
-            placeholder="Type your answer here..."
+            placeholder="Type your answer..."
             autoFocus
             required
             className="bg-black/50 font-inherit text-inherit px-4 py-2 cursor-pointer border border-[antiquewhite] rounded-md transition duration-200 text-white focus:shadow-[0_0_15px_antiquewhite]"

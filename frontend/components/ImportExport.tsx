@@ -1,7 +1,8 @@
 import Button from "./Button";
 import { exportEntries, importEntries, getUserEntries } from "../utils/entryDbFunctions";
 import useMyContext from "../hooks/useMyContext";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import ModalWindow from "./ModalWindow";
 
 function ImportExport() {
   const {
@@ -17,10 +18,21 @@ function ImportExport() {
     setUserEmail,
   } = useMyContext();
 
+  const [showModal, setShowModal] = useState(false);
+
   const fileImporterEl = useRef<HTMLInputElement | null>(null);
 
   // initiate import: open dialog window
-  const initImport = () => fileImporterEl.current?.click();
+  const initImport = () => {
+    setShowModal(true);
+    //     const answer = confirm(
+    //       `ℹ️ Informational message:
+    //
+    //
+    //
+    //     );
+    //     if (answer) fileImporterEl.current?.click();
+  };
 
   // process input
   const reactToInput = async (e: Event) => {
@@ -130,7 +142,24 @@ function ImportExport() {
             </Button>
           ))}
         </div>
+
         <input type="file" className="hidden" ref={fileImporterEl} />
+
+        {showModal && (
+          <ModalWindow
+            title="ℹ️ Import Notice"
+            text={[
+              "1. Allowed files: JSON formatted exactly like exports.",
+              "2. Fields mandatory for every entry: word, language, translation.",
+              "3. Optional fields: definition, category, img, example, note.",
+            ]}
+            okayAction={() => {
+              setShowModal(false);
+              fileImporterEl.current?.click();
+            }}
+            cancelAction={() => setShowModal(false)}
+          />
+        )}
       </>
     )
   );

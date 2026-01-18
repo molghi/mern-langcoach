@@ -9,7 +9,7 @@ module.exports = async function exportEntries(req, res) {
 
   // get all entries
   const entries = await Entry.find({ userId })
-    .select("-__v -updatedAt -nextRevisionDate -_id -userId") // dont return these fields: __v, updatedAt, etc.
+    .select("-__v -updatedAt -nextRevisionDate -_id -userId -createdAt") // dont return these fields: __v, updatedAt, etc.
     .lean(); // .lean() returns plain JS objects, not Mongoose docs
 
   // simply return

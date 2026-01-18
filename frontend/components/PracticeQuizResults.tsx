@@ -67,7 +67,7 @@ function PracticeQuizResults() {
       </div>
 
       {/* Action button */}
-      <div className="text-right flex gap-6 items-center justify-end flex-wrap sm:flex-nowrap">
+      <div className="text-right flex gap-6 md:mr-10 items-center justify-end flex-wrap sm:flex-nowrap">
         {/* Info msg */}
         {ratings.length < currentPractice.length && (
           <span className="bg-black/50 rounded-[5px] px-4 py-1.5 text-sm sm:text-md">

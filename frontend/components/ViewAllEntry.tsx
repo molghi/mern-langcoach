@@ -127,74 +127,80 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
     <div
       className={`border border-[${languageColors[data.language]}] text-[${
         languageColors[data.language]
-      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between hover:bg-black/70 flex-col sm:flex-row word-entry-block`}
+      }] rounded-lg p-4 bg-black/40 flex gap-4 justify-between hover:bg-black/85 flex-col sm:flex-row word-entry-block`}
     >
       {/* Fields */}
       <div className="flex flex-col gap-2 text-left">
         {/* Language */}
-        <div>
-          <span className="font-bold opacity-30">Language:</span>{" "}
+        <div className="md:whitespace-nowrap">
+          <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Language:</span>{" "}
           <span>{languages.find((x) => x.key === data.language)!["name"]}</span>
         </div>
 
         {/* Word */}
         <div>
-          <span className="font-bold opacity-30">Word:</span> <span>{data.word}</span>
+          <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Word:</span>{" "}
+          <span>{data.word}</span>
         </div>
 
         {/* Translation */}
         <div>
-          <span className="font-bold opacity-30">Translation:</span>{" "}
+          <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Translation:</span>{" "}
           <span className={`${currentPractice.length > 0 ? "" : "translation"}`}>{data.translation}</span>
         </div>
 
         {/* Your Answer */}
         {answer && answer.length > 0 && (
           <div>
-            <span className="font-bold opacity-60">Your Answer:</span> <span className="text-white">{answer}</span>
+            <span className="font-bold opacity-60 transition duration-300 hover:opacity-100">Your Answer:</span>{" "}
+            <span className="text-white">{answer}</span>
           </div>
         )}
 
         {/* Definition */}
         {data.definition && (
           <div>
-            <span className="font-bold opacity-30">Definition:</span> <span>{data.definition}</span>
+            <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Definition:</span>{" "}
+            <span>{data.definition}</span>
           </div>
         )}
 
         {/* Category */}
         {data.category && (
           <div>
-            <span className="font-bold opacity-30">Category:</span> <span>{data.category}</span>
+            <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Category:</span>{" "}
+            <span>{data.category}</span>
           </div>
         )}
 
         {/* Example */}
         {data.example && (
           <div>
-            <span className="font-bold opacity-30">Example:</span> <span>{data.example}</span>
+            <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Example:</span>{" "}
+            <span>{data.example}</span>
           </div>
         )}
 
         {/* Note */}
         {data.note && (
           <div>
-            <span className="font-bold opacity-30">Note:</span> <span>{data.note}</span>
+            <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Note:</span>{" "}
+            <span>{data.note}</span>
           </div>
         )}
 
         {/* Web Img */}
         {data.img && (
           <div className="flex gap-4">
-            <span className="font-bold opacity-30">Web Image:</span>{" "}
+            <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Web Image:</span>{" "}
             <img alt="Web Image" src={data.img} className="max-w-[200px] object-contain" />
           </div>
         )}
 
         {/* Created at */}
         <div className="text-[12px] transition duration-200 opacity-70 hover:opacity-100">
-          <span className="font-bold opacity-30 transition duration-300 hover:opacity-100">Added:</span>{" "}
-          <span className="opacity-30 transition duration-300 hover:opacity-100">{getWhenAdded(data.createdAt)}</span>
+          <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Added:</span>{" "}
+          <span className="opacity-40 transition duration-300 hover:opacity-100">{getWhenAdded(data.createdAt)}</span>
         </div>
       </div>
 

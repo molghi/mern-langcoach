@@ -82,7 +82,7 @@ function PracticeLangChoice({ addedLangs }: Props) {
 
             {/* Output possible errors/info msgs */}
             {error && (
-              <div className="mt-10 text-[coral] bg-black/50 rounded-[5px] px-4 py-1.5 text-green-500">
+              <div className="mt-10 text-[coral] bg-black/60 rounded-[5px] px-4 py-1.5 text-green-500">
                 <span className="font-bold opacity-60">Message:</span> {error}
               </div>
             )}
