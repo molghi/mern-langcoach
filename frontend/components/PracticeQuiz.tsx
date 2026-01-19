@@ -2,6 +2,7 @@ import useMyContext from "../hooks/useMyContext";
 import { useRef, useEffect, useState } from "react";
 import Button from "./Button";
 
+// Quiz Round
 function PracticeQuiz() {
   const { currentPractice, currentPracticeCounter, setCurrentPracticeCounter, setFlashMsgContent, setQuizAnswers } =
     useMyContext();
@@ -10,14 +11,28 @@ function PracticeQuiz() {
 
   const [inputVal, setInputVal] = useState<string>("");
   const [btnText, setBtnText] = useState<string>("Next"); // either Next or Finish
+  const [visible, setVisible] = useState<boolean>(false); // hide round first to smoothly fade-in it
 
   useEffect(() => {
     setInputVal(""); // reset input
+    setVisible(false); // hide round first to smoothly fade-in it
+
     if (currentPracticeCounter + 1 === currentPractice.length) {
       setBtnText("Finish"); // change btn text if last round
     }
-    inputRef.current?.focus(); // focus input field
+
+    const animationTimer = setTimeout(() => {
+      setVisible(true);
+    }, 500);
+
+    return () => clearTimeout(animationTimer);
   }, [currentPracticeCounter]);
+
+  useEffect(() => {
+    if (visible === true) {
+      inputRef.current?.focus(); // focus input field
+    }
+  }, [visible]);
 
   // ============================================================================
 
@@ -39,13 +54,15 @@ function PracticeQuiz() {
     }
   };
 
-  // ============================================================================
-
   const currentRoundData = currentPractice[currentPracticeCounter];
+
+  // ============================================================================
 
   return (
     <>
-      <div className="flex flex-col gap-10 w-full text-[antiquewhite] text-center max-w-xl mx-auto">
+      <div
+        className={`flex flex-col gap-10 w-full text-[antiquewhite] text-center max-w-xl mx-auto transition duration-500 ${visible ? "opacity-100" : "opacity-0 invisible"}`}
+      >
         {/* Title: what round it is */}
         <div className="flex flex-col gap-1 transition duration-200 opacity-60 hover:opacity-100">
           <h1 className="text-lg font-bold text-left">

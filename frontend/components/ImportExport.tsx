@@ -3,6 +3,7 @@ import { exportEntries, importEntries, getUserEntries } from "../utils/entryDbFu
 import useMyContext from "../hooks/useMyContext";
 import { useRef, useEffect, useState } from "react";
 import ModalWindow from "./ModalWindow";
+import { languages } from "../context/MyContext";
 
 function ImportExport() {
   const {
@@ -51,35 +52,40 @@ function ImportExport() {
     }
     // check proper formatting: get file contents
     const rawContents = await file.text(); // string of raw contents
-    const jsonized = JSON.parse(rawContents); // made json
-    const validationResult = checkProperFormatting(jsonized); // check that that json has all the fields I allow
-    if (validationResult === false) {
-      return setFlashMsgContent(["error", "File formatted incorrectly."]);
-    }
-    // push to db
-    if (Array.isArray(validationResult)) {
-      setIsLoading(true);
-      const importSuccessful = await importEntries(validationResult);
-      if (importSuccessful) {
-        setFlashMsgContent(["success", "Import successful!"]);
-        if (activeTab === 1) {
-          // re-fetch words if on View All tab
-          await getUserEntries(
-            setEntries,
-            setLanguagesAdded,
-            setCategoriesAdded,
-            setAllEntriesCount,
-            setEntriesMatchingQueryCount,
-            setUserEmail,
-            "category_show_all", // filter parameter
-            1 // page to show
-          );
-        }
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        setFlashMsgContent(["error", "Import failed."]);
+    try {
+      const jsonized = JSON.parse(rawContents); // made json
+      const validationResult = checkProperFormatting(jsonized); // check that that json has all the fields I allow
+      if (validationResult === false) {
+        return setFlashMsgContent(["error", "File formatted incorrectly."]);
       }
+      // push to db
+      if (Array.isArray(validationResult)) {
+        setIsLoading(true);
+        const importSuccessful = await importEntries(validationResult);
+        if (importSuccessful) {
+          setFlashMsgContent(["success", "Import successful!"]);
+          if (activeTab === 1) {
+            // re-fetch words if on View All tab
+            await getUserEntries(
+              setEntries,
+              setLanguagesAdded,
+              setCategoriesAdded,
+              setAllEntriesCount,
+              setEntriesMatchingQueryCount,
+              setUserEmail,
+              "category_show_all", // filter parameter
+              1 // page to show
+            );
+          }
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+          setFlashMsgContent(["error", "Import failed."]);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   };
 
@@ -149,12 +155,14 @@ function ImportExport() {
           <ModalWindow
             title="ℹ️ Import Notice"
             text={[
-              "1. Allowed files: JSON formatted exactly like exports.",
-              "2. Fields mandatory for every entry: word, language, translation.",
-              "3. Optional fields: definition, category, img, example, note.",
+              "Allowed files: JSON formatted exactly like exports.",
+              "Fields mandatory for every entry: word, language, translation.",
+              "Optional fields: definition, category, img, example, note.",
+              "Allowed languages: english, spanish, french, chinese, german, arabic, japanese, portuguese, russian, italian, korean, hindi, turkish, persian, czech, norwegian, icelandic, hebrew, latin, greek.",
             ]}
             okayAction={() => {
               setShowModal(false);
+              if (fileImporterEl.current) fileImporterEl.current.value = "";
               fileImporterEl.current?.click();
             }}
             cancelAction={() => setShowModal(false)}
@@ -209,6 +217,14 @@ function checkProperFormatting(arrOfObjs: any[]): any[] | boolean {
       Object.hasOwn(entryObj, "word") && Object.hasOwn(entryObj, "language") && Object.hasOwn(entryObj, "translation");
 
     if (!crucialFieldsPresent) {
+      console.error("Crucial fields missing: word, language, translation.");
+      return null;
+    }
+
+    if (!languages.map((x) => x.key).includes(entryObj.language)) {
+      console.error(
+        `Unsupported language: ${entryObj.language}.\n\nAllowed languages: english, spanish, french, chinese, german, arabic, japanese, portuguese, russian, italian, korean, hindi, turkish, persian, czech, norwegian, icelandic, hebrew, latin, greek.`
+      );
       return null;
     }
 

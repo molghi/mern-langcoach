@@ -134,7 +134,7 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
         {/* Language */}
         <div className="md:whitespace-nowrap">
           <span className="font-bold opacity-40 transition duration-300 hover:opacity-100">Language:</span>{" "}
-          <span>{languages.find((x) => x.key === data.language)!["name"]}</span>
+          <span title={data.language}>{languages.find((x) => x.key === data.language)!["name"]}</span>
         </div>
 
         {/* Word */}
@@ -152,7 +152,9 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
         {/* Your Answer */}
         {answer && answer.length > 0 && (
           <div>
-            <span className="font-bold opacity-60 transition duration-300 hover:opacity-100">Your Answer:</span>{" "}
+            <span className="font-bold opacity-60 text-white transition duration-300 hover:opacity-100">
+              Your Answer:
+            </span>{" "}
             <span className="text-white">{answer}</span>
           </div>
         )}

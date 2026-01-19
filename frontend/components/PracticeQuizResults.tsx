@@ -1,7 +1,7 @@
 import useMyContext from "../hooks/useMyContext";
 import ViewAllEntry from "./ViewAllEntry";
 import Button from "./Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { saveQuizResults } from "../utils/entryDbFunctions";
 
 function PracticeQuizResults() {
@@ -15,6 +15,7 @@ function PracticeQuizResults() {
   } = useMyContext();
 
   const [ratings, setRatings] = useState<any[]>([]); // arr of arrs: every inner arr is [currentWord, itsCurrentRating]
+  const [visible, setVisible] = useState<boolean>(false); // hide round first to smoothly fade-in it
 
   // ============================================================================
 
@@ -34,8 +35,20 @@ function PracticeQuizResults() {
 
   // ============================================================================
 
+  useEffect(() => {
+    const animationTimer = setTimeout(() => {
+      setVisible(true);
+    }, 500);
+
+    return () => clearTimeout(animationTimer);
+  }, []);
+
+  // ============================================================================
+
   return (
-    <div className="flex flex-col gap-10 w-full text-[antiquewhite] text-center">
+    <div
+      className={`flex flex-col gap-10 w-full text-[antiquewhite] text-center transition duration-500 ${visible ? "opacity-100" : "opacity-0 invisible"}`}
+    >
       {/* Title */}
       <h1 className="flex flex-col gap-2 max-w-2xl mx-auto">
         <span className="text-2xl font-bold">Assess your knowledge</span>{" "}

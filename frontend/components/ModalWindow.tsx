@@ -18,11 +18,14 @@ function ModalWindow({ title, text, okayAction, cancelAction }: Props) {
         {typeof text === "string" ? (
           <div>{text}</div>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ol className="flex flex-col gap-2 list-decimal list-inside">
             {text.map((x, i) => (
-              <li key={i}>{x}</li>
+              <li key={i}>
+                <span className="font-bold opacity-60">{x.split(":")[0]}:</span>
+                <span>{x.split(":")[1]}</span>
+              </li>
             ))}
-          </ul>
+          </ol>
         )}
 
         {/* Button */}
