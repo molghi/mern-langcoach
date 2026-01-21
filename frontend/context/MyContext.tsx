@@ -135,7 +135,7 @@ export const languageColors: Record<string, string> = {
 };
 
 // available choice for an animated bg
-export const availableBGs = {
+export const availableBGs: Record<string, string> = {
   "Snowing at dusk": "snowing-in-the-dusk.gif",
   // "snow-in-the-dark.gif": "snow-in-the-dark.gif",
   "Heavy snow": "heavy-snow.gif",

@@ -27,8 +27,8 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
   } = useMyContext();
 
   // format date string nicely
-  const getWhenAdded = (dateStr: string | undefined) => {
-    if (!dateStr) return;
+  const getWhenAdded = (dateStr: string | undefined): string | null => {
+    if (!dateStr) return null;
     const formatter = new Intl.DateTimeFormat("en-UK", {
       month: "2-digit",
       day: "2-digit",
@@ -104,7 +104,7 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
   // ============================================================================
 
   // this is essentially to mark a clicked btn with an active class, and unlock the bottom btn (Submit results)
-  const registerRating = (rating: string) => {
+  const registerRating = (rating: string): void => {
     if (setRatings)
       setRatings((prev) => {
         let entry = prev.find((el) => el[0] === data.word); // find this entry
@@ -256,9 +256,3 @@ function ViewAllEntry({ data, mode = "view_all_entry", answer, setRatings, ratin
 }
 
 export default ViewAllEntry;
-
-/*
-{
-    "img": "",
-}
-*/

@@ -23,6 +23,8 @@ function LogInForm() {
       setIsLoggedIn(true);
       setFlashMsgContent(["success", "Logged in!"]);
       setUserEmail(logInSuccessful);
+    } else {
+      setFlashMsgContent(["error", "Log in failed."]);
     }
   };
 

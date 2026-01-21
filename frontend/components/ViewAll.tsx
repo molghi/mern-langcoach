@@ -1,6 +1,6 @@
 import ViewAllEntry from "./ViewAllEntry";
 import ViewAllFilter from "./ViewAllFilter";
-import { getUserEntries, getAddedLangs } from "../utils/entryDbFunctions";
+import { getUserEntries } from "../utils/entryDbFunctions";
 import { useEffect, useState } from "react";
 import { entriesPerPage } from "../context/MyContext";
 import LoadingSpinner from "./LoadingSpinner";
@@ -38,7 +38,6 @@ function ViewAll() {
         filterOption,
         currentPage
       );
-      // await getAddedLangs(setLanguagesAdded);
       setIsLoading(false);
     };
     fetch();

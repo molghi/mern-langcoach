@@ -7,13 +7,11 @@ interface Props {
   onClick?: () => void; // () => void   means a generic fn returning void (= just a fn signature)
 }
 
-function Button(props: Props) {
-  const { children, className, onClick, type, style, title } = props;
-
+function Button({ children, className, onClick, type, style, title }: Props) {
   return (
     <button
       type={type || "button"}
-      title={title}
+      title={title || ""}
       onClick={onClick}
       className={`[@media(min-width:540px)]:px-4 px-2.5 py-2 text-[13px] sm:text-sm font-semibold rounded-md transition duration-200 border border-gray-600 text-[antiquewhite] ${className}`}
       style={style}

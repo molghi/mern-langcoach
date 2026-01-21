@@ -11,7 +11,6 @@ async function signUp(
   try {
     axios.defaults.withCredentials = true; // must be written before req is sent
     const response = await axios.post("http://localhost:8000/signup", { email, password, passwordConfirm });
-    console.log(response);
 
     if (response.status === 200 || response.status === 201) {
       setErrorMsg("");
@@ -38,7 +37,6 @@ async function logIn(email: string, password: string, setErrorMsg: React.Dispatc
   try {
     axios.defaults.withCredentials = true;
     const response = await axios.post("http://localhost:8000/login", { email, password });
-    console.log(response);
 
     if (response.status === 200) {
       setErrorMsg("");
@@ -63,7 +61,6 @@ async function checkAuth() {
   try {
     axios.defaults.withCredentials = true;
     const response = await axios.get("http://localhost:8000/check-auth");
-    console.log(response);
   } catch (error) {
     console.error("OOPS!", error);
   }

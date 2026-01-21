@@ -23,17 +23,8 @@ function ImportExport() {
 
   const fileImporterEl = useRef<HTMLInputElement | null>(null);
 
-  // initiate import: open dialog window
-  const initImport = () => {
-    setShowModal(true);
-    //     const answer = confirm(
-    //       `ℹ️ Informational message:
-    //
-    //
-    //
-    //     );
-    //     if (answer) fileImporterEl.current?.click();
-  };
+  // initiate import: show info modal before opening dialog window
+  const initImport = () => setShowModal(true);
 
   // process input
   const reactToInput = async (e: Event) => {

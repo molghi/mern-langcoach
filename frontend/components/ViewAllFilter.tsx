@@ -40,7 +40,7 @@ function ViewAllFilter({ filterOption, setFilterOption }: Props) {
 
   useEffect(() => {
     // react to using filter:
-    // compose parameter to properly identificate request
+    // compose filter parameter to properly identificate request
     let parameter = "";
     if (languages.map((x) => x.key).includes(filterOption)) {
       parameter = `language_${filterOption}`;
@@ -49,12 +49,12 @@ function ViewAllFilter({ filterOption, setFilterOption }: Props) {
     } else {
       parameter = `category_${filterOption}`;
     }
-    // fetch entries & update state
+    // fetch filtered entries & update state
     const fetchAndFilter = async () => {
       try {
         setIsLoading(true);
         // setCurrentPage(1);
-        const response = await getUserEntries(
+        await getUserEntries(
           setEntries,
           setLanguagesAdded,
           setCategoriesAdded,

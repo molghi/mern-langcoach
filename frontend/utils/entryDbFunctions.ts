@@ -139,6 +139,7 @@ async function saveQuizResults(currentPractice: EntryInterface[], ratings: any[]
   // calc spacedRep nextDateRevision -- and update db with it
   const idAndNextRevision: Record<string, string> = {};
   const now = new Date().getTime();
+
   currentPractice.forEach((roundObj) => {
     const currentRating = ratings.find((entry) => entry[0] === roundObj.word)[1];
     let nextRevDate = now;

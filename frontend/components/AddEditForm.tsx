@@ -167,7 +167,6 @@ function AddEditForm() {
     if (mode === "edit") {
       if (itemInEdit !== null) newEntry._id = itemInEdit._id;
       const isUpdateSuccessful = await updateOneEntry(newEntry, setError, setFlashMsgContent);
-      // if (isUpdateSuccessful) getUserEntries(setEntries); // no need to do that since I'm on tab 1
       if (isUpdateSuccessful) setItemInEdit(null); // switch mode back to Add
     }
   };

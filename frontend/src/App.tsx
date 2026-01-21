@@ -7,8 +7,8 @@ import FlashMessage from "../components/FlashMessage";
 import BackgroundImage from "../components/BackgroundImage";
 import Pagination from "../components/Pagination";
 import AuthForms from "../components/AuthForms";
-import { useContext, useEffect, useState } from "react";
-import { Context, entriesPerPage } from "../context/MyContext";
+import { useEffect, useState } from "react";
+import { entriesPerPage } from "../context/MyContext";
 import hotkeyHandler from "../utils/hotkeyHandler";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { getUserEntries } from "../utils/entryDbFunctions";
@@ -21,7 +21,8 @@ function Layout() {
   const { initFetchDone } = useMyContext();
 
   useEffect(() => {
-    if (initFetchDone) setContent(<Outlet />); // as init fetch done, show main UI -- until then, main UI place is empty
+    if (initFetchDone)
+      setContent(<Outlet />); // as init fetch done, show main UI -- until then, main UI place is empty
     else setContent(null); // this all done to avoid flashing auth forms on page reload when it reads from db
   }, [initFetchDone]);
 
@@ -43,8 +44,6 @@ function Layout() {
 
 // main component here
 function App() {
-  const ctx = useContext(Context);
-  if (!ctx) throw new Error("Incorrect context usage");
   const {
     activeTab,
     isLoggedIn,
@@ -63,7 +62,7 @@ function App() {
     setUserEmail,
     setIsLoading,
     setInitFetchDone,
-  } = ctx; // pull from context
+  } = useMyContext(); // pull from context
 
   const [isOnFirstPage, setIsOnFirstPage] = useState<boolean>(true);
   const [isOnLastPage, setIsOnLastPage] = useState<boolean>(false);

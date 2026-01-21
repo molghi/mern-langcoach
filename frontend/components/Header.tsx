@@ -21,6 +21,8 @@ function Header() {
 
   const navigate = useNavigate();
 
+  // ============================================================================
+
   interface ButtonsInterface {
     name: string;
     key: string;
@@ -29,10 +31,6 @@ function Header() {
     title?: string;
     link?: string;
   }
-
-  // console.log(`Header`, userEmail);
-
-  // ============================================================================
 
   const buttonsConfig: ButtonsInterface[] = [
     {
